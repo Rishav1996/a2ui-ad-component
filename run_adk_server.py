@@ -4,11 +4,14 @@ Starts the unified ADK server exposing official ADK agent endpoints
 (/run, /run_sse, /run_live, /apps/google_a2a_agent/run) alongside
 the full A2UI Search & Stream Log Web interface.
 """
+import os
 import sys
 import uvicorn
 
 if __name__ == "__main__":
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
-    print(f"Starting Google ADK Server on http://127.0.0.1:{port} ...")
-    uvicorn.run("web_app.server:app", host="127.0.0.1", port=port, reload=False)
+    host = os.getenv("HOST", "0.0.0.0")
+    default_port = int(os.getenv("PORT", "8000"))
+    port = int(sys.argv[1]) if len(sys.argv) > 1 else default_port
+    print(f"Starting Google ADK Server on http://{host}:{port} ...")
+    uvicorn.run("web_app.server:app", host=host, port=port, reload=False)
 
