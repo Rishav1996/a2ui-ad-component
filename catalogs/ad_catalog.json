@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://a2ui.org/specification/v0_9/catalogs/custom/ad_catalog.json",
+  "title": "A2UI v0.9 Ad & Sponsored Components Extension Catalog",
+  "description": "Custom extension catalog defining AdBanner and real-time contextual SponsoredCard components for A2UI v0.9 surfaces.",
+  "type": "object",
+  "properties": {
+    "AdBanner": {
+      "$ref": "#/$defs/AdBanner"
+    },
+    "SponsoredCard": {
+      "$ref": "#/$defs/SponsoredCard"
+    }
+  },
+  "$defs": {
+    "AdBanner": {
+      "type": "object",
+      "description": "A high-visibility sponsored banner supporting mandatory advertiser disclosure and trackable action clicks.",
+      "allOf": [
+        {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/CatalogComponentCommon"
+        }
+      ],
+      "properties": {
+        "sponsorName": {
+          "description": "Brand or entity funding the advertisement.",
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"
+        },
+        "headline": {
+          "description": "Primary promotional message or value proposition.",
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"
+        },
+        "bodyText": {
+          "description": "Optional secondary promotional description, offer details, or terms.",
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"
+        },
+        "ctaLabel": {
+          "description": "Action button text such as 'Claim Credits' or 'Learn More'.",
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"
+        },
+        "disclosureText": {
+          "description": "Mandatory regulatory disclosure badge (e.g., 'Sponsored', 'Promoted').",
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"
+        },
+        "mediaUrl": {
+          "description": "Optional HTTPS URL to a banner graphic or brand emblem.",
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"
+        },
+        "onClickAction": {
+          "description": "A2UI Action dispatched when user clicks the banner or CTA button.",
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        },
+        "badgeColor": {
+          "description": "Optional CSS color or token string for the disclosure badge.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sponsorName",
+        "headline",
+        "ctaLabel",
+        "disclosureText",
+        "onClickAction"
+      ]
+    },
+    "SponsoredCard": {
+      "type": "object",
+      "description": "A real-time contextual sponsored card designed for search result grids and multi-ad card layouts.",
+      "allOf": [
+        {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/CatalogComponentCommon"
+        }
+      ],
+      "properties": {
+        "sponsorName": {
+          "description": "Brand or advertiser name.",
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"
+        },
+        "headline": {
+          "description": "Promotional headline dynamically tailored to the user's search query.",
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"
+        },
+        "bodyText": {
+          "description": "Promotional value proposition or offer details.",
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"
+        },
+        "ctaLabel": {
+          "description": "Call to action label (e.g. 'Claim ₹5,000 Credit', 'Deploy Instance').",
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"
+        },
+        "disclosureText": {
+          "description": "Mandatory regulatory disclosure (e.g. 'Sponsored').",
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"
+        },
+        "mediaUrl": {
+          "description": "Optional HTTPS URL to sponsor logo or creative asset.",
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"
+        },
+        "badgeText": {
+          "description": "Optional promotional pill badge (e.g., 'Lowest Cost/hr', 'Instant Deploy').",
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"
+        },
+        "clearingPrice": {
+          "description": "Real-time second-price auction clearing CPM in INR.",
+          "type": "number"
+        },
+        "onClickAction": {
+          "description": "A2UI Action dispatched when user clicks the card or CTA button.",
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "sponsorName",
+        "headline",
+        "ctaLabel",
+        "disclosureText",
+        "onClickAction"
+      ]
+    }
+  }
+}

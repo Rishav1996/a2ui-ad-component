@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://a2ui.org/specification/v0_9/common_types.json",
+  "title": "A2UI v0.9 Common Types",
+  "type": "object",
+  "$defs": {
+    "DynamicString": {
+      "description": "A string that can be specified literally or resolved from state/data-model.",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "literalString": { "type": "string" }
+          },
+          "required": ["literalString"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" }
+          },
+          "required": ["path"],
+          "additionalProperties": false
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "DynamicBoolean": {
+      "description": "A boolean that can be specified literally or dynamically.",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "literalBoolean": { "type": "boolean" }
+          },
+          "required": ["literalBoolean"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" }
+          },
+          "required": ["path"],
+          "additionalProperties": false
+        },
+        {
+          "type": "boolean"
+        }
+      ]
+    },
+    "Action": {
+      "description": "An action emitted by an interactive A2UI component.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "context": {
+          "type": "object"
+        }
+      },
+      "required": ["name"]
+    },
+    "CatalogComponentCommon": {
+      "description": "Common properties shared by all catalog components.",
+      "type": "object",
+      "properties": {
+        "weight": { "type": "number" },
+        "accessibilityLabel": { "$ref": "#/$defs/DynamicString" }
+      }
+    }
+  }
+}
+

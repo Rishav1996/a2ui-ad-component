@@ -1,0 +1,52 @@
+cff-version: 1.2.0
+message: "If you use this software or cite its generative UI ad auction framework, please cite it as below."
+title: "A2UI Ad Component: Non-Intrusive Sponsored Generative UI & Multi-Agent Auction Engine in Google ADK"
+type: software
+authors:
+  - family-names: "Saigal"
+    given-names: "Rishav"
+    email: "rishavsaigal@gmail.com"
+    orcid: "https://orcid.org/0009-0005-5548-3016"
+repository-code: "https://github.com/Rishav1996/a2ui-ad-component"
+url: "https://github.com/Rishav1996/a2ui-ad-component"
+license: Apache-2.0
+version: 0.1.0
+date-released: 2026-11-02
+doi: "10.5281/zenodo.21634891"
+abstract: >
+  A production-grade Google Agent Development Kit (google-adk) framework implementing
+  and evaluating A2UI v0.9 commercial user interface components (AdBanner and SponsoredCard).
+  Integrates a real-time second-price Vickrey ad auction engine, deterministic callback hook
+  injection, content-grounded educational gating, live SerpApi search ads retrieval,
+  multi-turn SSE token streaming, and automated API quota governance.
+keywords:
+  - generative-ui
+  - a2ui
+  - google-adk
+  - multi-agent-systems
+  - ad-auction
+  - vickrey-auction
+  - adk-callbacks
+  - gemini
+  - serpapi
+  - context-grounding
+references:
+  - type: software
+    title: "Google Agent Development Kit (ADK)"
+    authors:
+      - name: "Google LLC"
+    url: "https://github.com/google/agent-development-kit"
+  - type: standard
+    title: "A2UI: Agent-to-User Interface Specification v0.9"
+    authors:
+      - name: "A2UI Working Group"
+preferred-citation:
+  type: software
+  authors:
+    - family-names: "Saigal"
+      given-names: "Rishav"
+      orcid: "https://orcid.org/0009-0005-5548-3016"
+  doi: "10.5281/zenodo.21634891"
+  month: 11
+  title: "A2UI Ad Component: Non-Intrusive Sponsored Generative UI & Multi-Agent Auction Engine in Google ADK"
+  year: 2026

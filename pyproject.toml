@@ -1,0 +1,25 @@
+[project]
+name = "a2ui-ad-component"
+version = "0.1.0"
+description = "A2UI v0.9 Commercial UI Extension & Multi-Agent Test Suite in Google ADK"
+readme = "README.md"
+authors = [
+    { name = "Rishav Saigal", email = "rishavsaigal@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "duckduckgo-search>=8.1.1",
+    "google-adk>=2.13.0",
+    "jsonschema>=4.26.0",
+    "litellm>=1.106.6",
+    "mcp>=2.3.0",
+    "pydantic>=2.14.2",
+    "pytest>=9.2.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A2UI AI Conversational Search & Sponsored Ad Platform</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Top Navigation Header -->
+    <header class="top-nav">
+      <div class="nav-brand">
+        <div class="brand-logo">A2UI</div>
+        <div class="brand-info">
+          <h1>AI Chat & Sponsored Surfaces</h1>
+          <span class="brand-tag">Google ADK Multi-Agent</span>
+        </div>
+      </div>
+      <nav class="nav-tabs">
+        <button class="tab-btn active" id="tab-chat-btn" onclick="switchTab('chat')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          Continuous AI Chat
+        </button>
+        <button class="tab-btn" id="tab-analytics-btn" onclick="switchTab('analytics')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          Search & Ad Stream Log
+        </button>
+      </nav>
+      <div class="nav-actions">
+        <button class="new-chat-btn" id="btn-new-chat" onclick="handleNewChat()" title="Start a fresh conversation thread">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>New Chat</span>
+        </button>
+        <div class="nav-status">
+          <span class="status-indicator"></span>
+          <span class="status-text" id="session-badge">Session: Active</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+      
+      <!-- ================================================================= -->
+      <!-- VIEW 1: CONTINUOUS AI CHAT WORKSPACE -->
+      <!-- ================================================================= -->
+      <section class="tab-pane active chat-view-pane" id="chat-view">
+        <div class="chat-workspace">
+          
+          <!-- Scrollable Chat Messages Thread -->
+          <div class="chat-scroll-container" id="chat-scroll-container">
+            
+            <!-- Empty State Starter -->
+            <div class="chat-starter" id="chat-starter">
+              <div class="starter-icon-wrap">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              </div>
+              <h2 class="starter-title">Continuous AI Research Chat</h2>
+              <p class="starter-subtitle">
+                Ask questions and follow up naturally. The Google ADK Multi-Agent pipeline retains conversation context across turns, streaming authentic answers with zero-hallucination sponsored recommendations.
+              </p>
+
+              <!-- Quick Suggestion Chips -->
+              <div class="starter-chips-container">
+                <span class="chips-label">Popular topics to explore:</span>
+                <div class="query-chips">
+                  <button class="chip-btn" onclick="runChipPrompt('Can you tell me which watches are top 3 tier')">⌚ Top 3 Tier Watches</button>
+                  <button class="chip-btn" onclick="runChipPrompt('what is GPU')">🛒 What is GPU</button>
+                  <button class="chip-btn" onclick="runChipPrompt('best crm software for startups')">🏢 Best CRM Software</button>
+                  <button class="chip-btn" onclick="runChipPrompt('cheap flights to London')">✈️ Flights to London</button>
+                  <button class="chip-btn" onclick="runChipPrompt('car insurance quotes')">🚗 Car Insurance</button>
+                  <button class="chip-btn" onclick="runChipPrompt('how do trees produce oxygen')">🌿 How trees produce oxygen</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dynamic Messages List -->
+            <div class="chat-messages-list" id="chat-messages-list">
+              <!-- Message turns (User bubble + Assistant bubble + Inline A2UI SponsoredCards) appended dynamically -->
+            </div>
+          </div>
+
+          <!-- Server Down Alert Banner (Chat) -->
+          <div class="server-down-banner hidden" id="chat-server-down-banner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            <span>Free quota is complete and this server is down. Please wait for next month.</span>
+          </div>
+
+          <!-- Sticky Bottom Chat Input Bar -->
+          <div class="chat-input-sticky-footer">
+            <form id="chat-form" class="chat-input-form" onsubmit="handleChatSubmit(event)">
+              <div class="chat-input-box">
+                <textarea 
+                  id="chat-textarea" 
+                  class="chat-textarea" 
+                  placeholder="Ask a question or follow up on previous answers..." 
+                  rows="1" 
+                  onkeydown="handleTextareaKeyDown(event)"
+                  required
+                ></textarea>
+                <button type="submit" class="chat-send-btn" id="chat-send-btn" title="Send message (Enter)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+              </div>
+            </form>
+            <div class="chat-footer-meta">
+              <span>Press <kbd>Enter</kbd> to send, <kbd>Shift + Enter</kbd> for new line</span>
+              <span class="bullet">•</span>
+              <span>Google ADK Multi-Agent Context Active</span>
+              <span class="bullet">•</span>
+              <span>Zero-Hallucination Verified Sourcing</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- VIEW 2: SEARCH & AD STREAM LOG -->
+      <!-- ================================================================= -->
+      <section class="tab-pane hidden" id="analytics-view">
+        <div class="dashboard-header">
+          <div>
+            <h2 class="dash-title">Search & Contextual Ad Stream Log</h2>
+            <p class="dash-subtitle">Live audit stream tracking user search queries, detected intent, and triggered sponsored cards.</p>
+          </div>
+          <div class="dash-actions">
+            <button class="action-btn secondary-btn" onclick="fetchAnalyticsData()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+              Refresh
+            </button>
+            <button class="action-btn danger-btn" onclick="handleResetAnalytics()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              Clear Log
+            </button>
+          </div>
+        </div>
+
+        <!-- Server Down Alert Banner (Analytics) -->
+        <div class="server-down-banner hidden" id="analytics-server-down-banner">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <span>Free quota is complete and this server is down. Please wait for next month.</span>
+        </div>
+
+        <!-- API Quota & Free Tier Health Section -->
+        <div class="quota-dashboard-section">
+          <div class="quota-cards-grid">
+            <!-- Card 1: SerpApi Quota -->
+            <div class="quota-card" id="serpapi-quota-card">
+              <div class="quota-card-top">
+                <div class="quota-card-title-wrap">
+                  <span class="quota-provider-logo">🔍</span>
+                  <div>
+                    <h4 class="quota-card-title">SerpApi Search Ads & Shopping</h4>
+                    <span class="quota-card-plan" id="serpapi-plan-name">Free Plan (250/mo)</span>
+                  </div>
+                </div>
+                <span class="quota-status-badge active" id="serpapi-status-badge">Active</span>
+              </div>
+              <div class="quota-metric-row">
+                <span class="quota-metric-value" id="serpapi-searches-left">--</span>
+                <span class="quota-metric-label">Searches Left This Month</span>
+              </div>
+              <div class="quota-progress-track">
+                <div class="quota-progress-fill" id="serpapi-progress-fill" style="width: 0%;"></div>
+              </div>
+              <div class="quota-card-footer" id="serpapi-footer-text">
+                Loading live account balance...
+              </div>
+            </div>
+
+            <!-- Card 2: Google Gemini LLM Quota -->
+            <div class="quota-card" id="llm-quota-card">
+              <div class="quota-card-top">
+                <div class="quota-card-title-wrap">
+                  <span class="quota-provider-logo">✨</span>
+                  <div>
+                    <h4 class="quota-card-title">Google Gemini LLM Free Tier</h4>
+                    <span class="quota-card-plan" id="llm-model-name">gemini-flash-lite (1,500 RPD)</span>
+                  </div>
+                </div>
+                <span class="quota-status-badge active" id="llm-status-badge">Active</span>
+              </div>
+              <div class="quota-metric-row">
+                <span class="quota-metric-value" id="llm-quota-status">--</span>
+                <span class="quota-metric-label">Requests Left Today (RPD)</span>
+              </div>
+              <div class="quota-progress-track">
+                <div class="quota-progress-fill llm-fill" id="llm-progress-fill" style="width: 100%;"></div>
+              </div>
+              <div class="quota-card-footer" id="llm-footer-text">
+                Loading live LLM capacity...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-Time Query-to-Ad Stream Log Table -->
+        <div class="table-section">
+          <div class="table-header">
+            <h3 class="table-title">Query-to-Ad Real-Time Audit Log</h3>
+            <span class="table-badge">Active SQLite Ledger</span>
+          </div>
+          <div class="table-responsive">
+            <table class="audit-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>User Query</th>
+                  <th>Intent Category</th>
+                  <th>Triggered Sponsored Ads</th>
+                </tr>
+              </thead>
+              <tbody id="audit-table-body">
+                <tr>
+                  <td colspan="4" class="empty-state">No search queries logged yet. Start a conversation above!</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <span>A2UI Ad Component • Autonomous Multi-Agent Commercial Extension for Google ADK</span>
+        <span>Streaming Token SSE Engine • SQLite Real-Time Telemetry</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "title": "A2UI Ad Component: Non-Intrusive Sponsored Generative UI & Multi-Agent Auction Engine in Google ADK",
+  "upload_type": "software",
+  "description": "Production-grade generative UI monetization and multi-agent test suite implementing A2UI v0.9 (AdBanner & SponsoredCard) within Google Agent Development Kit (google-adk). Features deterministic lifecycle ad injection, second-price Vickrey auctions, content-grounded educational gating, live SerpApi search ads retrieval, and multi-turn SSE streaming.",
+  "creators": [
+    {
+      "name": "Saigal, Rishav",
+      "affiliation": "Independent AI Researcher",
+      "orcid": "0009-0005-5548-3016"
+    }
+  ],
+  "access_right": "open",
+  "license": "Apache-2.0",
+  "keywords": [
+    "generative-ui",
+    "a2ui",
+    "google-adk",
+    "multi-agent",
+    "ad-auction",
+    "vickrey-auction",
+    "gemini",
+    "serpapi",
+    "llm-monetization"
+  ]
+}
