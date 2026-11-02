@@ -16,3 +16,4 @@ __all__ = [
     "render_visual_sponsored_cards_markdown",
     "AD_CATALOG_ID",
 ]
+

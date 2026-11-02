@@ -152,3 +152,4 @@ The production web interface:
 .venv\Scripts\pytest tests
 ```
 All 31 unit tests will run, covering schemas, auctions, hooks, and multi-agent coordination.
+

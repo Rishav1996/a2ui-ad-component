@@ -171,3 +171,4 @@ To ensure the system remains 100% free with zero surprise bills, `QuotaManager` 
 - **SerpApi Search Ads**: Queries the live SerpApi Account API for the remaining monthly quota (e.g. `205 / 250 Left`).
 - **Server-Down Protection**: If either quota reaches 0 (or a 429 quota exhaustion is detected), the server locks inputs and alerts the user:
   > **`"Free quota is complete and this server is down. Please wait for next month."`**
+

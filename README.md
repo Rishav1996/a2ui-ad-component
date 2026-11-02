@@ -1,7 +1,7 @@
 # A2UI v0.9 Commercial UI Extension & Multi-Agent Auction Engine in Google ADK
 
 [![Live Demo](https://img.shields.io/badge/Firebase_Hosting-Live_Demo-FFCA28?logo=firebase&logoColor=black)](https://a2ui-ad-component.web.app)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23872615.svg)](https://doi.org/10.5281/zenodo.23872615)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23872614.svg)](https://doi.org/10.5281/zenodo.23872614)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13-blue.svg)](https://www.python.org/)
 [![Google ADK](https://img.shields.io/badge/Google%20ADK-2.13.0-orange.svg)](https://github.com/google/agent-development-kit)
@@ -196,7 +196,7 @@ If you use this repository, its A2UI v0.9 ad extension schemas, or its multi-age
   year         = 2026,
   publisher    = {Zenodo},
   version      = {0.1.0},
-  doi          = {10.5281/zenodo.23872615},
+  doi          = {10.5281/zenodo.23872614},
   url          = {https://github.com/Rishav1996/a2ui-ad-component}
 }
 ```
