@@ -121,17 +121,6 @@ def after_model_callback(turn_state: dict[str, Any]) -> dict[str, Any]:
     return turn_state
 ```
 
-### The Hard Benchmark Numbers
-
-We benchmarked this lifecycle injection approach (Mode B) against prompt injection (Mode A) across open-source and proprietary models (`gemma3:1b`, `qwen2.5:1.5b`, and `gemini-2.0-flash`):
-
-| Performance Metric | Mode A (Prompt-Injected) | Mode B (ADK Lifecycle Hook) | Business & Technical Impact |
-| :--- | :--- | :--- | :--- |
-| **A2UI Schema Pass Rate** | **52.0%** | **100.0%** | **Zero broken UI surfaces on client devices** |
-| **Prompt Token Overhead** | **1,240 tokens / query** | **0 tokens** | **100% token cost reduction on system prompts** |
-| **Commercial Steering Bias** | **7.4 / 10** | **0.8 / 10** | **Preserves editorial trust and model objectivity** |
-| **Response Latency (TTFT)** | **4.2 seconds** | **1.8 seconds** | **57% faster Time-to-First-Token for users** |
-
 ---
 
 ## Part 3: The Deployed Platform & How to Interact With It
@@ -230,7 +219,7 @@ GOOGLE_API_KEY=your_gemini_api_key_here
 python run_adk_server.py
 ```
 
-If you use this benchmark architecture or reference the A2UI monetization framework in your research, please cite our persistent Zenodo concept DOI:
+If you build upon this architecture or reference the A2UI monetization framework in your research, please cite our persistent Zenodo concept DOI:
 
 ```bibtex
 @software{saigal_2026_a2ui_ad_component,
