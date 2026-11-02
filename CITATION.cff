@@ -10,8 +10,8 @@ authors:
 repository-code: "https://github.com/Rishav1996/a2ui-ad-component"
 url: "https://github.com/Rishav1996/a2ui-ad-component"
 license: Apache-2.0
-version: 0.1.9
-date-released: 2026-11-02
+version: 0.1.10
+date-released: 2026-11-03
 doi: "10.5281/zenodo.23872614"
 abstract: >
   A production-grade Google Agent Development Kit (google-adk) framework implementing
