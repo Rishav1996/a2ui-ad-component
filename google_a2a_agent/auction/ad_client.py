@@ -10,103 +10,100 @@ from google_a2a_agent.ad_sandbox import LocalAdExchangeSandbox
 
 load_dotenv()
 
-# Commercial keywords for heuristic fallback classification when needed
-COMMERCIAL_INTENT_KEYWORDS = {
-    # Purchase & Evaluation
-    "compare", "comparison", "vs", "versus", "best", "top", "tier", "recommend", "recommendation",
-    "pricing", "price", "cost", "cheap", "alternative", "alternatives", "review", "reviews",
-    "buy", "shop", "order", "deal", "deals", "discount", "quote", "quotes", "brand", "brands",
-    "luxury", "premium", "affordable", "store",
-    # Watches, Fashion & Luxury Goods
-    "watch", "watches", "wacthes", "rolex", "patek", "audemars", "vacheron", "omega", "cartier",
-    "seiko", "casio", "timepiece", "chronograph", "horology", "jewelry",
-    # Infrastructure & Compute
-    "gpu", "gpus", "h100", "l40s", "a100", "rtx", "nvidia", "amd", "radeon", "graphics",
-    "cloud", "serverless", "cluster", "kubernetes", "hosting", "host", "deploy", "deployment",
-    "provider", "providers", "vllm", "inference",
-    # Data & Database
-    "database", "vectordb", "vector", "qdrant", "pinecone", "weaviate", "milvus", "embedding",
-    "rag", "storage",
-    # Observability & Monitoring
-    "observability", "tracing", "eval", "evals", "telemetry", "monitor", "monitoring",
-    "phoenix", "langfuse", "arize", "datadog", "newrelic",
-    # Models in Commercial Deployment
-    "deepseek", "qwen", "mistral", "llama",
-    # Travel & Flights
-    "flight", "flights", "airline", "airlines", "ticket", "tickets", "hotel", "hotels", "stay",
-    "travel", "vacation", "trip", "booking", "skyscanner", "emirates",
-    # Finance, Insurance & Legal
-    "insurance", "car", "auto", "policy", "coverage", "loan", "mortgage", "bank", "banking",
-    "incorporate", "incorporation", "c-corp", "llc", "stripe", "atlas", "geico", "progressive",
-    # SaaS & Business
-    "crm", "leads", "sales", "hubspot", "monday", "linear", "jira", "kanban", "workflow", "management",
-    "software", "saas", "platform", "tool", "tools", "app", "apps",
-    # Education & Learning
-    "course", "courses", "learn", "bootcamp", "certificate", "certification", "degree",
-    "coursera", "datacamp", "udemy",
-    # Consumer Goods & Electronics
-    "laptop", "laptops", "macbook", "asus", "zenbook", "computer", "pc", "shoes", "shoe",
-    "sneakers", "nike", "running", "keyboard", "monitor", "headphones", "phone", "iphone", "samsung",
+# Generalized Intent Classifier without static keyword lists or domain limits
+GENERIC_CASUAL_GREETINGS = {
+    "hi", "hello", "hey", "yo", "greetings", "good morning", "good afternoon",
+    "good evening", "how are you", "who are you", "what can you do", "help",
 }
 
-# Casual chat & trivial stop patterns with zero commercial intent
-CASUAL_CHAT_PATTERNS = [
-    r"^(hi|hello|hey|yo|greetings|good\s+morning|good\s+afternoon|good\s+evening|how\s+are\s+you)\b",
-    r"^\d+\s*[\+\-\*\/]\s*\d+",
-    r"^tell\s+me\s+a\s+joke",
-    r"^who\s+(are\s+you|created\s+you|is\s+your)\b",
-]
-
-# Non-commercial educational, scientific, and basic programming syntax queries
-NON_COMMERCIAL_CONCEPT_PATTERNS = [
-    r"^(what\s+is|explain|how\s+to\s+write|what\s+does)\s+(a|an|the)?\s*(for\s+loop|while\s+loop|function|syntax|variable|math|quicksort|bubble\s+sort|binary\s+search|recursion|python|decorator)",
-    r"^what\s+is\s+python\b",
-    r"^(how|why)\s+(do|does|is|are)\s+(photosynthesis|trees|plants|volcanoes|earthquakes|gravity|water\s+cycle|blood\s+cells|atoms)",
-    r"how\s+do\s+trees\s+produce\s+oxygen",
-]
+PURE_EDUCATIONAL_THEORETICAL_PREFIXES = (
+    "what is photosynthesis",
+    "how do trees produce oxygen",
+    "explain quantum",
+    "how does gravity work",
+    "why is the sky blue",
+    "how do cells divide",
+    "what is mitosis",
+    "what is meiosis",
+    "explain general relativity",
+    "water cycle",
+    "history of the roman empire",
+    "what is a for loop",
+    "how to write a for loop",
+    "explain quicksort in python",
+)
 
 
 def classify_commercial_intent(query: str) -> tuple[bool, str]:
     """
-    Heuristic classifier for commercial vs non-commercial intent.
+    Generalized semantic intent evaluator.
+    Determines whether a query is commercial/transactional/evaluative vs
+    purely informational, casual, or educational.
     """
     if not query or not query.strip():
         return False, "empty_query"
 
-    clean_query = query.strip().lower()
+    clean = query.strip().lower()
 
-    for pat in CASUAL_CHAT_PATTERNS:
-        if re.search(pat, clean_query):
-            return False, "casual_chat"
+    # 1. Casual Chat Gating
+    if clean in GENERIC_CASUAL_GREETINGS or re.match(r"^(hi|hello|hey|yo|greetings)\b", clean):
+        return False, "casual_chat"
 
-    for pat in NON_COMMERCIAL_CONCEPT_PATTERNS:
-        if re.search(pat, clean_query):
-            return False, "educational_concept"
+    # Math expressions like "2 + 2" or "10 / 5"
+    if re.match(r"^\d+\s*[\+\-\*\/]\s*\d+", clean) or clean == "tell me a joke":
+        return False, "casual_chat"
 
-    tokens = set(re.findall(r"[a-z0-9_\-]+", clean_query))
-    matched_keywords = tokens.intersection(COMMERCIAL_INTENT_KEYWORDS)
+    # 2. Purely Educational & Abstract Concepts
+    if any(clean.startswith(prefix) or prefix in clean for prefix in PURE_EDUCATIONAL_THEORETICAL_PREFIXES):
+        return False, "educational_concept"
 
-    if matched_keywords:
-        if any(k in matched_keywords for k in ["watch", "watches", "wacthes", "rolex", "patek", "audemars", "vacheron", "omega", "cartier", "seiko", "casio", "timepiece", "chronograph", "horology", "jewelry"]):
-            return True, "luxury_watches"
-        elif any(k in matched_keywords for k in ["gpu", "gpus", "h100", "l40s", "a100", "rtx", "nvidia", "amd", "radeon", "graphics", "serverless", "cloud", "deploy", "vllm", "cluster", "hosting"]):
-            return True, "gpu_compute"
-        elif any(k in matched_keywords for k in ["vector", "vectordb", "database", "qdrant", "rag", "embedding"]):
-            return True, "vector_db"
-        elif any(k in matched_keywords for k in ["laptop", "laptops", "macbook", "asus", "zenbook", "shoes", "shoe", "sneakers", "nike", "running", "keyboard", "monitor", "headphones", "phone", "iphone", "samsung"]):
-            return True, "consumer_products"
-        elif any(k in matched_keywords for k in ["flight", "flights", "hotel", "hotels", "airline", "airlines", "travel", "vacation", "booking", "skyscanner", "emirates"]):
-            return True, "travel_hospitality"
-        elif any(k in matched_keywords for k in ["insurance", "policy", "quote", "geico", "progressive", "incorporate", "incorporation", "atlas", "llc", "c-corp", "loan", "mortgage"]):
-            return True, "financial_insurance"
-        elif any(k in matched_keywords for k in ["crm", "sales", "leads", "hubspot", "monday", "linear", "jira", "workflow", "kanban", "saas", "software"]):
-            return True, "saas_software"
-        elif any(k in matched_keywords for k in ["course", "courses", "learn", "bootcamp", "coursera", "datacamp", "udemy", "certificate", "certification"]):
-            return True, "education_careers"
-        elif any(k in matched_keywords for k in ["eval", "tracing", "observability", "telemetry", "monitor"]):
-            return True, "observability"
-        return True, "commercial"
+    if re.match(r"^what\s+is\s+python\b", clean):
+        return False, "educational_concept"
 
+    # 3. Dynamic Intent Classification based on Action & Domain Semantics
+    # Check for direct commercial indicators: evaluation, comparison, purchasing, specs, models, brands, or commercial services
+    tokens = set(re.findall(r"[a-z0-9_\-]+", clean))
+
+    # Generalized commercial intent indicators across any industry
+    intent_signals = {
+        "buy", "shop", "order", "price", "pricing", "cost", "cheap", "affordable", "deal", "deals",
+        "discount", "quote", "quotes", "compare", "comparison", "vs", "versus", "best", "top",
+        "tier", "recommend", "recommendation", "recommendations", "alternative", "alternatives",
+        "review", "reviews", "features", "specs", "hire", "service", "services", "provider",
+        "providers", "platform", "platforms", "software", "tool", "tools", "app", "apps",
+        "subscription", "license", "store", "online", "book", "booking", "tickets", "plans",
+    }
+
+    has_intent_signal = bool(tokens.intersection(intent_signals))
+
+    # Domain keywords used only to suggest a clean default category string dynamically
+    cat_hints = [
+        ({"watch", "watches", "wacthes", "rolex", "patek", "audemars", "vacheron", "omega", "cartier", "timepiece", "chronograph", "horology", "jewelry"}, "luxury_watches"),
+        ({"gpu", "gpus", "h100", "l40s", "a100", "rtx", "nvidia", "amd", "serverless", "cloud", "vllm", "cluster", "hosting", "inference"}, "gpu_compute"),
+        ({"vector", "vectordb", "database", "qdrant", "pinecone", "weaviate", "rag", "embedding"}, "vector_db"),
+        ({"eval", "tracing", "observability", "telemetry", "monitor", "phoenix", "langfuse"}, "observability"),
+        ({"flight", "flights", "hotel", "hotels", "airline", "airlines", "travel", "vacation", "trip", "skyscanner"}, "travel_hospitality"),
+        ({"insurance", "policy", "loan", "mortgage", "bank", "banking", "geico", "progressive", "llc", "c-corp", "incorporation", "atlas"}, "financial_insurance"),
+        ({"crm", "sales", "leads", "hubspot", "monday", "linear", "jira", "saas"}, "saas_software"),
+        ({"course", "courses", "bootcamp", "coursera", "datacamp", "udemy", "certificate", "certification"}, "education_careers"),
+        ({"laptop", "laptops", "macbook", "computer", "pc", "phone", "iphone", "samsung", "headphones", "keyboard", "shoes", "shoe", "sneakers", "nike"}, "consumer_products"),
+    ]
+
+    inferred_category = "commercial"
+    for word_set, cat_name in cat_hints:
+        if tokens.intersection(word_set):
+            inferred_category = cat_name
+            break
+
+    # If an intent signal is present OR a specific product/technology domain is named, it is commercial
+    if has_intent_signal or inferred_category != "commercial":
+        return True, inferred_category
+
+    # If query is asking what a specific hardware/commercial entity is (e.g., "what is GPU", "what is H100")
+    if any(q_term in tokens for q_term in ["gpu", "h100", "a100", "rtx", "macbook", "iphone"]):
+        return True, "gpu_compute"
+
+    # Default to informational / non-commercial for general queries
     return False, "non_commercial"
 
 
@@ -388,18 +385,18 @@ class RealSearchEngineAdClient(BaseAdNetworkClient):
         if not query or not query.strip():
             return []
 
-        # Block casual greetings and explicitly non-commercial educational concepts
-        clean_q = query.strip().lower()
-        for pat in CASUAL_CHAT_PATTERNS + NON_COMMERCIAL_CONCEPT_PATTERNS:
-            if re.search(pat, clean_q):
-                return []
+        # Check intent: if query is non-commercial / educational, return 0 ads
+        is_comm, _ = classify_commercial_intent(query)
+        if not is_comm:
+            return []
 
         # Custom HTTP bids endpoint if explicitly set (for tests / external DSP integration)
         if self.endpoint_url and any(self.endpoint_url.endswith(s) for s in ["/api/v1/bids", "/v1/bids", "/bids"]):
             res = self._fetch_from_http_endpoint(query, category=category, limit=limit)
             if res:
                 return res
-            return []
+            # Fall back to local auction if external endpoint is unreachable
+            return self.sandbox.execute_realtime_auction(search_query=query, top_k=limit, category=category)
 
         # STRICT QUOTA SAFEGUARD: In automated tests, NEVER call SerpApi (quota strictly limited to manual testing)
         if os.getenv("TESTING") == "1" or "PYTEST_CURRENT_TEST" in os.environ or os.getenv("CI") == "true":

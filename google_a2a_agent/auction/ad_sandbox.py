@@ -475,24 +475,23 @@ class LocalAdExchangeSandbox:
         Dynamically adapts promotional copy in real time based on search query intent.
         """
         camp = copy.deepcopy(campaign)
-        q = (query_text or "").lower()
+        q = (query_text or "").strip()
+        q_lower = q.lower()
 
-        if "deepseek" in q and ("gpu" in camp.get("category", "") or "cloud" in camp["sponsor_name"].lower()):
-            camp["headline"] = f"Deploy DeepSeek-R1 at 60% Lower Cost on {camp['sponsor_name']}"
-            camp["body"] = "Zero cold-start vLLM nodes optimized for DeepSeek reasoning. Claim free developer credits."
+        # Specific high-relevance badges when key technologies are explicitly queried
+        if "deepseek" in q_lower:
             camp["badge"] = "DeepSeek Optimized"
-        elif "qwen" in q and ("gpu" in camp.get("category", "") or "cloud" in camp["sponsor_name"].lower()):
-            camp["headline"] = f"Host Qwen-2.5-Coder with Instant vLLM Scaling on {camp['sponsor_name']}"
+        elif "qwen" in q_lower:
             camp["badge"] = "Qwen Verified"
-        elif "kubernetes" in q and "gpu" in camp.get("category", ""):
-            camp["headline"] = f"Automated Kubernetes GPU Clusters on {camp['sponsor_name']}"
+        elif "kubernetes" in q_lower or "k8s" in q_lower:
             camp["badge"] = "K8s Ready"
-        elif ("memory" in q or "retrieval" in q) and "vector" in camp.get("category", ""):
-            camp["headline"] = f"Sub-Millisecond Multi-Agent Memory on {camp['sponsor_name']}"
+        elif "memory" in q_lower or "rag" in q_lower:
             camp["badge"] = "Agent Memory"
-        elif ("drift" in q or "hallucination" in q) and "eval" in camp.get("category", ""):
-            camp["headline"] = f"Detect LLM Drift & Hallucinations with {camp['sponsor_name']}"
+        elif "drift" in q_lower or "eval" in q_lower:
             camp["badge"] = "Drift Detection"
+        elif q:
+            # Dynamic generalized badge
+            camp["badge"] = "Verified Partner"
 
         return camp
 

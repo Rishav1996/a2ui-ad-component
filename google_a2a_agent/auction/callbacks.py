@@ -63,7 +63,25 @@ def inject_a2ui_ad_callback(
     state_category = callback_context.state.get("intent_category")
     state_commercial = callback_context.state.get("commercial_intent")
 
-    if state_commercial is not None:
+    # Check if the LLM output in this turn directly specified intent and category
+    llm_text = ""
+    for part in llm_response.content.parts:
+        if getattr(part, "text", None):
+            llm_text += part.text + "\n"
+
+    parsed_intent = None
+    parsed_category = None
+    intent_m = re.search(r"INTENT:\s*(commercial|non_commercial)", llm_text, flags=re.IGNORECASE)
+    if intent_m:
+        parsed_intent = (intent_m.group(1).lower() == "commercial")
+    cat_m = re.search(r"CATEGORY:\s*([a-zA-Z0-9_\-]+)", llm_text, flags=re.IGNORECASE)
+    if cat_m:
+        parsed_category = cat_m.group(1).lower()
+
+    if parsed_intent is not None:
+        is_commercial = parsed_intent
+        category = parsed_category or state_category or ("commercial" if is_commercial else "non_commercial")
+    elif state_commercial is not None:
         is_commercial = bool(state_commercial)
         category = state_category or "commercial"
     else:

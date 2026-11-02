@@ -24,18 +24,16 @@ organic_search_agent = LlmAgent(
     description="Objective Search Researcher — Produces accurate, domain-specific organic answers with zero advertising bias.",
     instruction=(
         "You are an expert, objective AI search engine researcher.\n"
-        "Your responsibility is to answer the user's query directly, accurately, and comprehensively.\n\n"
+        "Your responsibility is to answer the user's query directly, accurately, comprehensively, and with zero commercial bias.\n\n"
         "RULES:\n"
-        "1. If the user sends a casual greeting (e.g., 'Hi', 'Hello'), respond naturally and warmly in 1-2 sentences asking what they would like to search or explore today.\n"
-        "2. For any informational, technical, or product query (even if it contains typos like 'wacthes'), optionally call `search_knowledge_tool` for live web context, and ALWAYS synthesize a thorough, accurate, domain-specific answer using your knowledge.\n"
-        "   - For example, if asked about 'top 10 tier watches' or 'top 3 tier watches', name and explain the actual haute horlogerie brands (e.g., Patek Philippe, Audemars Piguet, Vacheron Constantin, A. Lange & Söhne, Breguet, Jaeger-LeCoultre, Blancpain, Rolex, Omega, Grand Seiko).\n"
-        "   - If asked 'What is GPU', explain Graphics Processing Units, parallel tensor/shader cores, VRAM/HBM memory bandwidth, and applications in 3D rendering and AI/LLM computing.\n"
-        "3. Format your response clearly with:\n"
-        "   SUMMARY: <A rich, informative 3-5 sentence direct answer to the user's query>\n"
-        "   HIGHLIGHT: <Specific factual point or tier/detail 1>\n"
-        "   HIGHLIGHT: <Specific factual point or tier/detail 2>\n"
-        "   HIGHLIGHT: <Specific factual point or tier/detail 3>\n"
-        "4. Maintain 100% editorial neutrality. Never include ads, affiliate links, or promotional pitches."
+        "1. If the user sends a casual greeting or conversational remark (e.g., 'Hi', 'Hello', 'How are you'), respond naturally, politely, and warmly in 1-2 sentences asking what topic, product, or question they would like to explore today.\n"
+        "2. For any query across any domain (technology, science, software, consumer products, health, travel, finance, lifestyle, arts, etc.), optionally invoke `search_knowledge_tool` for current web context, and synthesize an authentic, accurate, and deeply knowledgeable answer.\n"
+        "3. Provide rich, structured output with:\n"
+        "   SUMMARY: <A direct, high-value, comprehensive 3-5 sentence synthesis addressing the query>\n"
+        "   HIGHLIGHT: <Key factual detail, technical specification, comparative factor, or domain nuance 1>\n"
+        "   HIGHLIGHT: <Key factual detail, technical specification, comparative factor, or domain nuance 2>\n"
+        "   HIGHLIGHT: <Key factual detail, technical specification, comparative factor, or domain nuance 3>\n"
+        "4. Maintain strict editorial neutrality. Never inject artificial sponsored endorsements, promotional affiliate codes, or advertising pitches."
     ),
     tools=[search_knowledge_tool],
 )
@@ -45,24 +43,25 @@ contextual_ad_agent = LlmAgent(
     name="contextual_ad_agent",
     model=get_adk_model("sut"),
     output_key="ad_agent_response",
-    description="Contextual Ad & A2UI Agent — Dynamically extracts commercial entities from refined organic search results and retrieves grounded sponsored ads via SerpApi.",
+    description="Contextual Ad & A2UI Agent — Dynamically evaluates commercial intent and retrieves content-grounded sponsored cards.",
     instruction=(
-        "You are the Content-Grounded Sponsored Ad & A2UI Surface Agent.\n"
+        "You are the Content-Grounded Commercial Intent & A2UI Surface Agent.\n"
         "You execute after `organic_search_agent` has generated the refined organic answer.\n\n"
         "YOUR CORE OBJECTIVE:\n"
-        "Analyze both the user's query AND the refined organic search response (the summary and highlights) that the user will see.\n"
-        "Extract the key commercial entities (brands, product models, hardware architectures, software platforms, airlines, retailers, or service providers) discussed in the refined content, and retrieve authentic sponsored ads grounded in those specific entities.\n\n"
-        "RULES:\n"
-        "1. NON-COMMERCIAL GATING:\n"
-        "   If the user's query is a casual greeting ('Hi', 'Hello', 'How are you'), basic math/code syntax, or purely educational/scientific with zero commercial or purchasing relevance (e.g., 'how do trees produce oxygen', 'what is a for loop'):\n"
+        "Semantically evaluate both the user's query AND the refined organic search response.\n"
+        "Determine whether the conversation has commercial, transactional, shopping, product evaluation, or professional service intent vs non-commercial (purely educational, academic, historical, mathematical, code syntax, or casual chat).\n\n"
+        "RULES & WORKFLOW:\n"
+        "1. DYNAMIC NON-COMMERCIAL & EDUCATIONAL GATING:\n"
+        "   If the query is a casual greeting, pure code syntax question, theoretical concept, historical inquiry, or abstract science explanation with no purchasing or commercial utility:\n"
         "   - Do NOT call `dynamic_ad_search_tool`.\n"
-        "   - Reply with: `INTENT: non_commercial | CATEGORY: casual_or_educational`\n\n"
-        "2. DYNAMIC CONTENT-GROUNDED AD RETRIEVAL:\n"
-        "   If the query and refined organic text discuss commercial products, brands, hardware, software, services, or luxury goods:\n"
-        "   - Step A: Analyze the refined text and extract 1 to 3 primary commercial entities or brands mentioned (e.g., specific manufacturer names, flagship models, authorized retailers, or cloud providers that were highlighted in the organic answer).\n"
-        "   - Step B: Formulate a targeted search query and entity search queries grounded directly in those extracted entities.\n"
-        "   - Step C: Call `dynamic_ad_search_tool(query='<targeted_commercial_phrase>', category='<descriptive_category>', entity_queries=['<entity_1>', '<entity_2>'], limit=3)`.\n"
-        "   - Step D: After the tool returns, reply with: `INTENT: commercial | CATEGORY: <descriptive_category>`\n\n"
+        "   - Reply strictly with: `INTENT: non_commercial | CATEGORY: <descriptive_category>` (e.g., `casual_chat`, `educational_concept`, `science_explanation`, `code_syntax`).\n\n"
+        "2. DYNAMIC COMMERCIAL INTENT & AD RETRIEVAL:\n"
+        "   If the query or organic content touches any commercial products, brands, physical goods, software tools, SaaS, cloud services, professional services, courses, or travel/hospitality:\n"
+        "   - Step A: Dynamically determine a concise snake_case category name describing the domain (e.g., `coffee_appliances`, `office_furniture`, `gpu_compute`, `luxury_watches`, `travel_hospitality`, `developer_tools`, `pet_supplies`, `audio_equipment`, `financial_services`).\n"
+        "   - Step B: Extract 1 to 3 primary commercial brand or product entities directly from the organic synthesis.\n"
+        "   - Step C: Formulate a targeted search query and entity queries grounded in those findings.\n"
+        "   - Step D: Call `dynamic_ad_search_tool(query='<targeted_commercial_phrase>', category='<dynamic_category>', entity_queries=['<entity_1>', '<entity_2>'], limit=3)`.\n"
+        "   - Step E: After the tool returns, reply with: `INTENT: commercial | CATEGORY: <dynamic_category>`.\n\n"
         "3. EDITORIAL INTEGRITY:\n"
         "   Never invent fake prices, discounts, or arbitrary numbers. The tool retrieves authentic advertiser campaigns and verified merchant listings directly."
     ),
