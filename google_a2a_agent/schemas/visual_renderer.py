@@ -1,5 +1,5 @@
 import json
-from typing import Any
+from typing import Any, Optional
 
 AD_CATALOG_ID = "https://a2ui.org/specification/v0_9/catalogs/custom/ad_catalog.json"
 BASIC_CATALOG_ID = "https://a2ui.org/specification/v0_9/catalogs/basic_catalog.json"
@@ -48,6 +48,40 @@ def render_visual_sponsored_cards_markdown(cards: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def build_sponsored_card_node(camp: dict[str, Any], idx: int) -> Optional[dict[str, Any]]:
+    """Builds a canonical A2UI v0.9 SponsoredCard component node dictionary."""
+    t_url = camp.get("target_url", "")
+    m_url = camp.get("media_url", "")
+    if not t_url.startswith("https://"):
+        return None
+    if m_url and not m_url.startswith("https://"):
+        m_url = ""
+
+    return {
+        "id": f"sponsored_card_{idx+1}_{camp.get('campaign_id', idx)}",
+        "component": {
+            "SponsoredCard": {
+                "sponsorName": {"literalString": camp.get("sponsor_name", "Sponsor")},
+                "headline": {"literalString": camp.get("headline", "")},
+                "bodyText": {"literalString": camp.get("body", "")},
+                "ctaLabel": {"literalString": camp.get("cta_label", "Learn More")},
+                "disclosureText": {"literalString": camp.get("disclosure", "Sponsored")},
+                "mediaUrl": {"literalString": m_url},
+                "badgeText": {"literalString": str(camp.get("badge", "Sponsored"))},
+                "clearingPrice": float(camp.get("clearing_price_inr", 350.0)),
+                "onClickAction": {
+                    "name": "apply_sponsored_offer",
+                    "context": {
+                        "targetUrl": {"literalString": t_url},
+                        "campaignId": {"literalString": str(camp.get("campaign_id", f"camp_{idx}"))},
+                        "promoCode": {"literalString": camp.get("promo_code", "ADK_PROMO")},
+                    },
+                },
+            }
+        },
+    }
+
+
 def build_a2ui_search_surface(
     query_text: str,
     gist_text: str,
@@ -78,36 +112,9 @@ def build_a2ui_search_surface(
     ]
 
     for idx, camp in enumerate(cards):
-        t_url = camp.get("target_url", "")
-        m_url = camp.get("media_url", "")
-        if not t_url.startswith("https://"):
-            continue
-        if m_url and not m_url.startswith("https://"):
-            m_url = ""
-
-        components.append({
-            "id": f"sponsored_card_{idx+1}_{camp.get('campaign_id', idx)}",
-            "component": {
-                "SponsoredCard": {
-                    "sponsorName": {"literalString": camp.get("sponsor_name", "Sponsor")},
-                    "headline": {"literalString": camp.get("headline", "")},
-                    "bodyText": {"literalString": camp.get("body", "")},
-                    "ctaLabel": {"literalString": camp.get("cta_label", "Learn More")},
-                    "disclosureText": {"literalString": camp.get("disclosure", "Sponsored")},
-                    "mediaUrl": {"literalString": m_url},
-                    "badgeText": {"literalString": camp.get("badge", "Sponsored")},
-                    "clearingPrice": float(camp.get("clearing_price_inr", 350.0)),
-                    "onClickAction": {
-                        "name": "apply_sponsored_offer",
-                        "context": {
-                            "targetUrl": {"literalString": t_url},
-                            "campaignId": {"literalString": camp.get("campaign_id", f"camp_{idx}")},
-                            "promoCode": {"literalString": camp.get("promo_code", "ADK_PROMO")},
-                        },
-                    },
-                }
-            },
-        })
+        node = build_sponsored_card_node(camp, idx)
+        if node:
+            components.append(node)
 
     return {
         "createSurface": {
@@ -119,4 +126,3 @@ def build_a2ui_search_surface(
             "components": components,
         }
     }
-

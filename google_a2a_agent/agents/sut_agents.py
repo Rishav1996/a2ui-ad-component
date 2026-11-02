@@ -1,7 +1,7 @@
 from google.adk.agents import LlmAgent
-from google_a2a_agent.callbacks import inject_a2ui_ad_callback, validate_a2ui_security_callback
-from google_a2a_agent.model_router import get_adk_model
-from google_a2a_agent.schema_manager import A2uiSchemaManager
+from google_a2a_agent.auction.callbacks import inject_a2ui_ad_callback, validate_a2ui_security_callback
+from google_a2a_agent.governance.model_router import get_adk_model
+from google_a2a_agent.schemas.schema_manager import A2uiSchemaManager
 
 schema_manager = A2uiSchemaManager()
 

@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 import pytest
-from google_a2a_agent.schema_manager import A2uiSchemaManager
+from google_a2a_agent.schemas.schema_manager import A2uiSchemaManager
 
 CATALOGS_DIR = Path(__file__).resolve().parent.parent / "catalogs"
 

@@ -3,9 +3,9 @@ from unittest.mock import MagicMock
 import pytest
 from google.adk.models import LlmResponse
 from google.genai import types
-from google_a2a_agent.ad_sandbox import LocalAdExchangeSandbox, MOCK_CAMPAIGNS
-from google_a2a_agent.schema_manager import A2uiSchemaManager
-from google_a2a_agent.callbacks import inject_a2ui_ad_callback, AD_CATALOG_ID
+from google_a2a_agent.auction.ad_sandbox import LocalAdExchangeSandbox
+from google_a2a_agent.schemas.schema_manager import A2uiSchemaManager
+from google_a2a_agent.auction.callbacks import inject_a2ui_ad_callback, AD_CATALOG_ID
 
 @pytest.fixture
 def sandbox():
@@ -16,27 +16,24 @@ def schema_manager():
     return A2uiSchemaManager()
 
 def test_realtime_auction_returns_top_3_distinct_winners(sandbox):
-    winners = sandbox.execute_realtime_auction("Deploy DeepSeek-R1 models on serverless GPU containers", top_k=3)
+    candidates = [
+        {"campaign_id": "c1", "keywords": ["gpu", "serverless"], "cpm_inr": 450.0},
+        {"campaign_id": "c2", "keywords": ["gpu", "deepseek"], "cpm_inr": 400.0},
+        {"campaign_id": "c3", "keywords": ["gpu", "containers"], "cpm_inr": 350.0},
+        {"campaign_id": "c4", "keywords": ["other"], "cpm_inr": 200.0},
+    ]
+    winners = sandbox.execute_realtime_auction(
+        candidate_campaigns=candidates,
+        search_query="Deploy DeepSeek on serverless GPU",
+        top_k=3,
+    )
     assert len(winners) == 3
-    # Check uniqueness
     campaign_ids = [w["campaign_id"] for w in winners]
     assert len(set(campaign_ids)) == 3
-    # Check clearing price is present
     for w in winners:
         assert "clearing_price_inr" in w
         assert w["clearing_price_inr"] > 0
         assert w["clearing_price_inr"] <= w["cpm_inr"]
-
-def test_realtime_copy_personalization_deepseek(sandbox):
-    winners = sandbox.execute_realtime_auction("Deploy DeepSeek on GPU", top_k=1)
-    winner = winners[0]
-    assert "deepseek" in winner["headline"].lower() or "deepseek" in winner.get("badge", "").lower()
-
-def test_realtime_copy_personalization_vector_memory(sandbox):
-    winners = sandbox.execute_realtime_auction("Fast vector search for multi-agent memory storage", top_k=3)
-    # The winners should be vector database sponsors
-    categories = [w.get("category") for w in winners]
-    assert "vector_db" in categories
 
 def test_sponsored_card_schema_validation(schema_manager):
     valid_card = {
@@ -160,6 +157,38 @@ def test_inject_callback_appends_3_realtime_cards():
         "supported_catalog_ids": [AD_CATALOG_ID],
         "ad_injected_this_turn": False,
         "ads_shown_count": 0,
+        "sponsored_cards": [
+            {
+                "campaign_id": "camp_01",
+                "sponsor_name": "Sponsor 1",
+                "headline": "Headline 1",
+                "body": "Body 1",
+                "target_url": "https://example.com/1",
+                "cpm_inr": 450.0,
+                "clearing_price_inr": 420.0,
+                "badge": "Top Rated",
+            },
+            {
+                "campaign_id": "camp_02",
+                "sponsor_name": "Sponsor 2",
+                "headline": "Headline 2",
+                "body": "Body 2",
+                "target_url": "https://example.com/2",
+                "cpm_inr": 400.0,
+                "clearing_price_inr": 380.0,
+                "badge": "Fastest",
+            },
+            {
+                "campaign_id": "camp_03",
+                "sponsor_name": "Sponsor 3",
+                "headline": "Headline 3",
+                "body": "Body 3",
+                "target_url": "https://example.com/3",
+                "cpm_inr": 350.0,
+                "clearing_price_inr": 320.0,
+                "badge": "Lowest Cost",
+            },
+        ],
     }
     mock_ctx.user_content = "Search for low latency vector databases for AI agents"
     mock_ctx.invocation_id = "test_search_turn_01"
@@ -192,8 +221,6 @@ def test_inject_callback_appends_3_realtime_cards():
     payload = json.loads(updated_resp.content.parts[0].text)
     surface = payload["createSurface"]
     components = surface["components"]
-    # 1 organic heading + 3 sponsored cards = 4 components
     assert len(components) == 4
     ad_components = [c for c in components if "SponsoredCard" in c["component"]]
     assert len(ad_components) == 3
-

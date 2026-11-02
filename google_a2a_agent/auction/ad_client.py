@@ -6,11 +6,12 @@ import urllib.request
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 from dotenv import load_dotenv
-from google_a2a_agent.ad_sandbox import LocalAdExchangeSandbox
+
+from google_a2a_agent.auction.ad_sandbox import LocalAdExchangeSandbox
 
 load_dotenv()
 
-# Generalized Intent Classifier without static keyword lists or domain limits
+# Intent Classification Markers
 GENERIC_CASUAL_GREETINGS = {
     "hi", "hello", "hey", "yo", "greetings", "good morning", "good afternoon",
     "good evening", "how are you", "who are you", "what can you do", "help",
@@ -33,6 +34,27 @@ PURE_EDUCATIONAL_THEORETICAL_PREFIXES = (
     "explain quicksort in python",
 )
 
+COMMERCIAL_INTENT_SIGNALS = {
+    "buy", "shop", "order", "price", "pricing", "cost", "cheap", "affordable", "deal", "deals",
+    "discount", "quote", "quotes", "compare", "comparison", "vs", "versus", "best", "top",
+    "tier", "recommend", "recommendation", "recommendations", "alternative", "alternatives",
+    "review", "reviews", "features", "specs", "hire", "service", "services", "provider",
+    "providers", "platform", "platforms", "software", "tool", "tools", "app", "apps",
+    "subscription", "license", "store", "online", "book", "booking", "tickets", "plans",
+}
+
+DOMAIN_CATEGORY_HINTS = [
+    ({"watch", "watches", "wacthes", "rolex", "patek", "audemars", "vacheron", "omega", "cartier", "timepiece", "chronograph", "horology", "jewelry"}, "luxury_watches"),
+    ({"gpu", "gpus", "h100", "l40s", "a100", "rtx", "nvidia", "amd", "serverless", "cloud", "vllm", "cluster", "hosting", "inference"}, "gpu_compute"),
+    ({"vector", "vectordb", "database", "qdrant", "pinecone", "weaviate", "rag", "embedding"}, "vector_db"),
+    ({"eval", "tracing", "observability", "telemetry", "monitor", "phoenix", "langfuse"}, "observability"),
+    ({"flight", "flights", "hotel", "hotels", "airline", "airlines", "travel", "vacation", "trip", "skyscanner"}, "travel_hospitality"),
+    ({"insurance", "policy", "loan", "mortgage", "bank", "banking", "geico", "progressive", "llc", "c-corp", "incorporation", "atlas"}, "financial_insurance"),
+    ({"crm", "sales", "leads", "hubspot", "monday", "linear", "jira", "saas"}, "saas_software"),
+    ({"course", "courses", "bootcamp", "coursera", "datacamp", "udemy", "certificate", "certification"}, "education_careers"),
+    ({"laptop", "laptops", "macbook", "computer", "pc", "phone", "iphone", "samsung", "headphones", "keyboard", "shoes", "shoe", "sneakers", "nike"}, "consumer_products"),
+]
+
 
 def classify_commercial_intent(query: str) -> tuple[bool, str]:
     """
@@ -49,7 +71,7 @@ def classify_commercial_intent(query: str) -> tuple[bool, str]:
     if clean in GENERIC_CASUAL_GREETINGS or re.match(r"^(hi|hello|hey|yo|greetings)\b", clean):
         return False, "casual_chat"
 
-    # Math expressions like "2 + 2" or "10 / 5"
+    # Math expressions or jokes
     if re.match(r"^\d+\s*[\+\-\*\/]\s*\d+", clean) or clean == "tell me a joke":
         return False, "casual_chat"
 
@@ -61,36 +83,11 @@ def classify_commercial_intent(query: str) -> tuple[bool, str]:
         return False, "educational_concept"
 
     # 3. Dynamic Intent Classification based on Action & Domain Semantics
-    # Check for direct commercial indicators: evaluation, comparison, purchasing, specs, models, brands, or commercial services
     tokens = set(re.findall(r"[a-z0-9_\-]+", clean))
-
-    # Generalized commercial intent indicators across any industry
-    intent_signals = {
-        "buy", "shop", "order", "price", "pricing", "cost", "cheap", "affordable", "deal", "deals",
-        "discount", "quote", "quotes", "compare", "comparison", "vs", "versus", "best", "top",
-        "tier", "recommend", "recommendation", "recommendations", "alternative", "alternatives",
-        "review", "reviews", "features", "specs", "hire", "service", "services", "provider",
-        "providers", "platform", "platforms", "software", "tool", "tools", "app", "apps",
-        "subscription", "license", "store", "online", "book", "booking", "tickets", "plans",
-    }
-
-    has_intent_signal = bool(tokens.intersection(intent_signals))
-
-    # Domain keywords used only to suggest a clean default category string dynamically
-    cat_hints = [
-        ({"watch", "watches", "wacthes", "rolex", "patek", "audemars", "vacheron", "omega", "cartier", "timepiece", "chronograph", "horology", "jewelry"}, "luxury_watches"),
-        ({"gpu", "gpus", "h100", "l40s", "a100", "rtx", "nvidia", "amd", "serverless", "cloud", "vllm", "cluster", "hosting", "inference"}, "gpu_compute"),
-        ({"vector", "vectordb", "database", "qdrant", "pinecone", "weaviate", "rag", "embedding"}, "vector_db"),
-        ({"eval", "tracing", "observability", "telemetry", "monitor", "phoenix", "langfuse"}, "observability"),
-        ({"flight", "flights", "hotel", "hotels", "airline", "airlines", "travel", "vacation", "trip", "skyscanner"}, "travel_hospitality"),
-        ({"insurance", "policy", "loan", "mortgage", "bank", "banking", "geico", "progressive", "llc", "c-corp", "incorporation", "atlas"}, "financial_insurance"),
-        ({"crm", "sales", "leads", "hubspot", "monday", "linear", "jira", "saas"}, "saas_software"),
-        ({"course", "courses", "bootcamp", "coursera", "datacamp", "udemy", "certificate", "certification"}, "education_careers"),
-        ({"laptop", "laptops", "macbook", "computer", "pc", "phone", "iphone", "samsung", "headphones", "keyboard", "shoes", "shoe", "sneakers", "nike"}, "consumer_products"),
-    ]
+    has_intent_signal = bool(tokens.intersection(COMMERCIAL_INTENT_SIGNALS))
 
     inferred_category = "commercial"
-    for word_set, cat_name in cat_hints:
+    for word_set, cat_name in DOMAIN_CATEGORY_HINTS:
         if tokens.intersection(word_set):
             inferred_category = cat_name
             break
@@ -99,11 +96,10 @@ def classify_commercial_intent(query: str) -> tuple[bool, str]:
     if has_intent_signal or inferred_category != "commercial":
         return True, inferred_category
 
-    # If query is asking what a specific hardware/commercial entity is (e.g., "what is GPU", "what is H100")
+    # Specific hardware queries ("what is GPU", "what is H100")
     if any(q_term in tokens for q_term in ["gpu", "h100", "a100", "rtx", "macbook", "iphone"]):
         return True, "gpu_compute"
 
-    # Default to informational / non-commercial for general queries
     return False, "non_commercial"
 
 
@@ -135,40 +131,43 @@ class BaseAdNetworkClient(ABC):
         pass
 
 
-class LocalSandboxAdClient(BaseAdNetworkClient):
-    """
-    Offline test sandbox client (used only by explicit unit tests when testing local auction math).
-    """
-
-    def __init__(self, sandbox: Optional[LocalAdExchangeSandbox] = None):
-        self.sandbox = sandbox or LocalAdExchangeSandbox()
-
-    def fetch_sponsored_cards(
-        self,
-        query: str,
-        category: str = "general",
-        entity_queries: Optional[list[str]] = None,
-        limit: int = 3,
-        region: Optional[str] = None,
-        location: Optional[str] = None,
-    ) -> list[dict[str, Any]]:
-        return self.sandbox.execute_realtime_auction(search_query=query, top_k=limit, category=category)
-
-    def log_impressions(self, session_id: str, winning_campaigns: list[dict[str, Any]]) -> dict[str, Any]:
-        return self.sandbox.log_batch_impressions(session_id, winning_campaigns)
-
-    def log_click(self, session_id: str, campaign_id: str) -> dict[str, Any]:
-        return self.sandbox.log_click(session_id, campaign_id)
-
-    def get_telemetry(self) -> dict[str, Any]:
-        return self.sandbox.get_telemetry_summary()
+def _build_card_dict(
+    campaign_id: str,
+    sponsor_name: str,
+    category: str,
+    headline: str,
+    body: str,
+    cta_label: str,
+    target_url: str,
+    media_url: str,
+    promo_code: str,
+    badge: str,
+    cpm_inr: float = 450.0,
+    clearing_price_inr: float = 420.0,
+) -> dict[str, Any]:
+    """Helper to assemble a normalized A2UI v0.9 SponsoredCard dictionary."""
+    clean_target = target_url if target_url.startswith("http") else f"https://{target_url}"
+    return {
+        "campaign_id": campaign_id,
+        "sponsor_name": sponsor_name,
+        "category": category,
+        "headline": headline,
+        "body": body,
+        "cta_label": cta_label,
+        "target_url": clean_target,
+        "media_url": media_url,
+        "promo_code": promo_code,
+        "badge": badge,
+        "cpm_inr": cpm_inr,
+        "clearing_price_inr": clearing_price_inr,
+        "disclosure": "Sponsored",
+    }
 
 
 class RealSearchEngineAdClient(BaseAdNetworkClient):
     """
     Dynamic Search Engine Ad Client powered by SerpApi (Google Search Ads & Google Shopping).
-    Strictly prohibits returning hardcoded MOCK_CAMPAIGNS (CloudScale GPU / GEICO / MacBook)
-    in production searches.
+    Adheres strictly to zero-dummy-data rules.
     """
 
     def __init__(
@@ -183,46 +182,9 @@ class RealSearchEngineAdClient(BaseAdNetworkClient):
         self.endpoint_url = endpoint_url
         self.sandbox = LocalAdExchangeSandbox()
 
-    def _fetch_from_http_endpoint(self, query: str, category: str, limit: int = 3) -> list[dict[str, Any]]:
-        """Sends a bid request to a custom HTTP/HTTPS bids endpoint if explicitly configured."""
-        if not self.endpoint_url or not any(self.endpoint_url.endswith(s) for s in ["/api/v1/bids", "/v1/bids", "/bids"]):
-            return []
-        payload = {
-            "query": query,
-            "category": category,
-            "ad_format": "a2ui_sponsored_card_v09",
-            "limit": limit,
-            "device": {"os": "web", "a2ui_version": "0.9"},
-        }
-        headers = {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "User-Agent": "Google-ADK-A2UI-Client/1.0",
-        }
-        if self.api_key:
-            headers["Authorization"] = f"Bearer {self.api_key}"
-        try:
-            req = urllib.request.Request(
-                self.endpoint_url,
-                data=json.dumps(payload).encode("utf-8"),
-                headers=headers,
-                method="POST",
-            )
-            with urllib.request.urlopen(req, timeout=self.timeout_seconds) as resp:
-                if resp.status == 200:
-                    data = json.loads(resp.read().decode("utf-8"))
-                    cards = data.get("cards") or data.get("bids") or []
-                    if cards:
-                        return cards
-        except Exception:
-            pass
-        return []
-
     @staticmethod
     def _clean_commercial_search_query(query: str) -> str:
-        """
-        Generic cleaning of conversational query prefixes without hardcoding any product or domain words.
-        """
+        """Generic cleaning of conversational query prefixes."""
         cleaned = re.sub(
             r"^(can\s+you\s+tell\s+me\s+(which\s+|what\s+)?|what\s+is\s+(a\s+|an\s+|the\s+)?|what\s+are\s+(the\s+)?|which\s+|explain\s+|how\s+to\s+(buy\s+|use\s+)?|compare\s+|best\s+|top\s+)",
             "",
@@ -244,7 +206,7 @@ class RealSearchEngineAdClient(BaseAdNetworkClient):
         if not self.api_key:
             return []
 
-        from google_a2a_agent.quota_manager import quota_manager
+        from google_a2a_agent.governance.quota_manager import quota_manager
         serp_quota = quota_manager.get_serpapi_quota()
         if serp_quota.get("is_exhausted"):
             print("[SerpApi] Free quota complete. Skipping live ad call.")
@@ -254,7 +216,6 @@ class RealSearchEngineAdClient(BaseAdNetworkClient):
         loc = location or os.getenv("SERPAPI_LOCATION", "New York, United States")
         hl = os.getenv("SERPAPI_HL", "en")
 
-        # Determine target search terms from entity_queries or clean query
         candidate_queries: list[str] = []
         if entity_queries and isinstance(entity_queries, list):
             for eq in entity_queries:
@@ -272,7 +233,6 @@ class RealSearchEngineAdClient(BaseAdNetworkClient):
         for target_q in candidate_queries:
             if len(cards) >= limit:
                 break
-            print(f"[SerpApi] Requesting live Google Ads for target: '{target_q}' (gl={gl}, loc={loc}) ...")
             params = urllib.parse.urlencode({
                 "engine": "google_ads",
                 "q": target_q,
@@ -298,21 +258,20 @@ class RealSearchEngineAdClient(BaseAdNetworkClient):
                             badge = str(exts[0] if exts else "Sponsored")[:24]
                             logo_url = ad.get("thumbnail") or f"https://www.google.com/s2/favicons?domain={clean_dom}&sz=128"
                             if title and link:
-                                cards.append({
-                                    "campaign_id": f"serpapi_ad_{idx}",
-                                    "sponsor_name": clean_dom or "Verified Sponsor",
-                                    "category": category,
-                                    "headline": title,
-                                    "body": snippet or f"Sponsored offer from {clean_dom}",
-                                    "cta_label": "Visit Site",
-                                    "target_url": link if link.startswith("http") else f"https://{link}",
-                                    "media_url": logo_url,
-                                    "promo_code": f"SERP_{idx}",
-                                    "badge": badge,
-                                    "cpm_inr": 450.0,
-                                    "clearing_price_inr": 420.0,
-                                    "disclosure": "Sponsored",
-                                })
+                                cards.append(_build_card_dict(
+                                    campaign_id=f"serpapi_ad_{idx}",
+                                    sponsor_name=clean_dom or "Verified Sponsor",
+                                    category=category,
+                                    headline=title,
+                                    body=snippet or f"Sponsored offer from {clean_dom}",
+                                    cta_label="Visit Site",
+                                    target_url=link,
+                                    media_url=logo_url,
+                                    promo_code=f"SERP_{idx}",
+                                    badge=badge,
+                                    cpm_inr=450.0,
+                                    clearing_price_inr=420.0,
+                                ))
             except Exception as e:
                 print(f"[SerpApi] Google Ads error for '{target_q}': {e}")
 
@@ -322,7 +281,6 @@ class RealSearchEngineAdClient(BaseAdNetworkClient):
                 if len(cards) >= limit:
                     break
                 remaining = limit - len(cards)
-                print(f"[SerpApi] Requesting live Google Shopping for target: '{target_q}' (gl={gl}) ...")
                 shop_params = urllib.parse.urlencode({
                     "engine": "google_shopping",
                     "q": target_q,
@@ -347,30 +305,26 @@ class RealSearchEngineAdClient(BaseAdNetworkClient):
                                 badge = str(price)[:24] if price else "In Stock"
                                 rating = it.get("rating")
                                 rating_str = f" • ★ {rating}" if rating else ""
-                                thumbnail = it.get("thumbnail") or f"https://www.google.com/s2/favicons?domain=google.com&sz=128"
+                                thumbnail = it.get("thumbnail") or "https://www.google.com/s2/favicons?domain=google.com&sz=128"
                                 if title and link:
-                                    body_text = f"Verified merchant: {source}."
-                                    if price:
-                                        body_text = f"Official price: {price}{rating_str}. Verified merchant: {source}."
-                                    cards.append({
-                                        "campaign_id": f"serpapi_shop_{s_idx}",
-                                        "sponsor_name": source,
-                                        "category": category,
-                                        "headline": title,
-                                        "body": body_text,
-                                        "cta_label": "View Deal",
-                                        "target_url": link if link.startswith("http") else f"https://{link}",
-                                        "media_url": thumbnail,
-                                        "promo_code": f"SHOP_{s_idx}",
-                                        "badge": badge,
-                                        "cpm_inr": 480.0,
-                                        "clearing_price_inr": 440.0,
-                                        "disclosure": "Sponsored",
-                                    })
+                                    body_text = f"Official price: {price}{rating_str}. Verified merchant: {source}." if price else f"Verified merchant: {source}."
+                                    cards.append(_build_card_dict(
+                                        campaign_id=f"serpapi_shop_{s_idx}",
+                                        sponsor_name=source,
+                                        category=category,
+                                        headline=title,
+                                        body=body_text,
+                                        cta_label="View Deal",
+                                        target_url=link,
+                                        media_url=thumbnail,
+                                        promo_code=f"SHOP_{s_idx}",
+                                        badge=badge,
+                                        cpm_inr=480.0,
+                                        clearing_price_inr=440.0,
+                                    ))
                 except Exception as e:
                     print(f"[SerpApi] Google Shopping error for '{target_q}': {e}")
 
-        print(f"[SerpApi] Result: Retrieved {len(cards)} live commercial cards.")
         return cards[:limit]
 
     def fetch_sponsored_cards(
@@ -385,26 +339,12 @@ class RealSearchEngineAdClient(BaseAdNetworkClient):
         if not query or not query.strip():
             return []
 
-        # Check intent: if query is non-commercial / educational, return 0 ads
         is_comm, _ = classify_commercial_intent(query)
         if not is_comm:
             return []
 
-        # Custom HTTP bids endpoint if explicitly set (for tests / external DSP integration)
-        if self.endpoint_url and any(self.endpoint_url.endswith(s) for s in ["/api/v1/bids", "/v1/bids", "/bids"]):
-            res = self._fetch_from_http_endpoint(query, category=category, limit=limit)
-            if res:
-                return res
-            # Fall back to local auction if external endpoint is unreachable
-            return self.sandbox.execute_realtime_auction(search_query=query, top_k=limit, category=category)
-
-        # STRICT QUOTA SAFEGUARD: In automated tests, NEVER call SerpApi (quota strictly limited to manual testing)
-        if os.getenv("TESTING") == "1" or "PYTEST_CURRENT_TEST" in os.environ or os.getenv("CI") == "true":
-            return self.sandbox.execute_realtime_auction(search_query=query, top_k=limit, category=category)
-
-        # Live SerpApi Google Ads & Google Shopping (manual user interaction)
         if self.api_key:
-            cards = self._fetch_from_serpapi(
+            return self._fetch_from_serpapi(
                 query=query,
                 entity_queries=entity_queries,
                 limit=limit,
@@ -412,7 +352,6 @@ class RealSearchEngineAdClient(BaseAdNetworkClient):
                 region=region,
                 location=location,
             )
-            return cards
 
         return []
 

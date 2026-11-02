@@ -1,10 +1,10 @@
 import json
 from typing import Any
 from google.adk.agents import LlmAgent, LoopAgent, ParallelAgent, SequentialAgent
-from google_a2a_agent.model_router import get_adk_model
-from google_a2a_agent.schema_manager import A2uiSchemaManager
-from google_a2a_agent.sut_agents import mode_a_agent, mode_b_agent
-from google_a2a_agent.tools import simulate_ad_banner_click, get_ad_telemetry_report
+from google_a2a_agent.governance.model_router import get_adk_model
+from google_a2a_agent.schemas.schema_manager import A2uiSchemaManager
+from google_a2a_agent.agents.sut_agents import mode_a_agent, mode_b_agent
+from google_a2a_agent.tools.ad_tools import simulate_ad_banner_click, get_ad_telemetry_report
 
 schema_manager = A2uiSchemaManager()
 

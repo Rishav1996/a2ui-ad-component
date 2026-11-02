@@ -1,7 +1,7 @@
 from typing import Any, Optional
 from dotenv import load_dotenv
 from google.adk.tools.tool_context import ToolContext
-from google_a2a_agent.ad_client import get_ad_network_client
+from google_a2a_agent.auction.ad_client import get_ad_network_client
 
 load_dotenv()
 
@@ -106,43 +106,15 @@ def fetch_sponsored_cards_tool(
     }
 
 
-def dynamic_ad_search_tool(
-    query: str,
-    category: str = "commercial",
-    entity_queries: Optional[list[str]] = None,
-    limit: int = 3,
-    region: Optional[str] = None,
-    location: Optional[str] = None,
-    tool_context: Optional[ToolContext] = None,
-) -> dict[str, Any]:
-    """
-    Content-Grounded Ad Search Tool for the ADK agent.
-    Dynamically retrieves authentic sponsored Google Search Ads and Google Shopping offers
-    matching the key commercial entities extracted from the refined organic search results.
-
-    Arguments:
-      - query: High-intent search phrase targeting the primary commercial entity or solution.
-      - category: Semantic category (e.g., 'luxury_watches', 'gpu_hardware', 'cloud_compute', 'saas_software').
-      - entity_queries: Optional list of specific brand/product entity search terms extracted from the text.
-      - limit: Maximum number of sponsored cards to retrieve (default 3).
-      - region: ISO country code (e.g., 'us', 'in', 'gb').
-      - location: Specific geographic location (e.g., 'New York, United States').
-    """
-    return fetch_sponsored_cards_tool(
-        query=query,
-        category=category,
-        entity_queries=entity_queries,
-        max_cards=limit,
-        region=region,
-        location=location,
-        tool_context=tool_context,
-    )
+dynamic_ad_search_tool = fetch_sponsored_cards_tool
 
 
 def simulate_ad_banner_click(
     campaign_id: str,
     tool_context: Optional[ToolContext] = None,
     session_id: str = "session_tool_call",
+    sponsor_name: str = "Sponsored Partner",
+    promo_code: str = "ADK_PROMO",
 ) -> dict[str, Any]:
     """Records a user clicking on a sponsored card CTA."""
     client = get_ad_network_client()
@@ -150,14 +122,6 @@ def simulate_ad_banner_click(
         session_id = str(tool_context.invocation_id)
 
     telemetry = client.log_click(session_id=session_id, campaign_id=campaign_id)
-
-    from google_a2a_agent.ad_sandbox import MOCK_CAMPAIGNS
-    campaign = next(
-        (c for c in MOCK_CAMPAIGNS if c["campaign_id"] == campaign_id),
-        {"sponsor_name": "Sponsored Partner", "promo_code": "PROMO10"},
-    )
-    promo_code = campaign.get("promo_code", "PROMO10")
-    sponsor = campaign.get("sponsor_name", "Sponsored Partner")
 
     if tool_context and hasattr(tool_context, "state"):
         tool_context.state["active_promo_code"] = promo_code
@@ -168,7 +132,7 @@ def simulate_ad_banner_click(
         "campaign_id": campaign_id,
         "a2ui_action_status": "DISPATCHED_SUCCESSFULLY",
         "applied_promo_code": promo_code,
-        "sponsor": sponsor,
+        "sponsor": sponsor_name,
     }
 
 

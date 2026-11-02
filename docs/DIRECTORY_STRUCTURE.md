@@ -19,7 +19,7 @@ a2ui-ad-component/
 ├── catalogs/                          # Canonical A2UI v0.9 Component Specifications
 │   ├── ad_catalog.json                # JSON Schema for AdBanner & SponsoredCard
 │   ├── common_types.json              # Canonical common types ($defs)
-│   └── examples/                      # Valid v0.9 createSurface example payloads
+│   └── ad_examples/                   # Valid v0.9 createSurface example payloads
 │       └── sponsored_card.json        # Few-shot surface example
 │
 ├── docs/                              # Technical Documentation & Research Publications
@@ -92,8 +92,8 @@ a2ui-ad-component/
 This is the heart of the backend. It implements the Google ADK multi-agent pipeline and the ad auction engine:
 
 - **`google_a2a_agent/auction/`**:
-  - `ad_client.py`: Connects to SerpApi to retrieve live Google Shopping and search ads. Uses generalized intent classification heuristics without hardcoded 150-word dictionaries, falling back gracefully to local DSP mock campaigns if SerpApi is unconfigured or exhausted.
-  - `ad_sandbox.py`: Manages the local SQLite ledger (`query_ad_audit` table), computes the second-price Vickrey clearing price ($P_1 = \text{Bid}_2 + \text{₹1.00}$), and adapts ad copy and partner badges dynamically based on query intent.
+  - `ad_client.py`: Connects to SerpApi to retrieve live Google Shopping and search ads. Uses generalized intent classification heuristics, strictly adhering to zero-dummy-data rules.
+  - `ad_sandbox.py`: Manages the local SQLite ledger (`query_ad_audit` and `ad_events` tables), computes second-price Vickrey clearing prices ($P_1 = \text{Bid}_2 + \text{₹1.00}$), and logs live click and impression telemetry.
   - `callbacks.py`: Contains the `after_model_callback` hook that intercepts the agent output, parses model intent and category tags, and injects verified sponsored cards into the A2UI surface.
 - **`google_a2a_agent/agents/`**:
   - `coordinator.py`: Connects `organic_search_agent` and `contextual_ad_agent` into a unified `SequentialAgent`. Powers autonomous prompt-driven intent evaluation and dynamic snake_case category coining without dictionary bounds.

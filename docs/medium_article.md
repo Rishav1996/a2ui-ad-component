@@ -1,25 +1,11 @@
-<!-- 
-======================================================================
-MEDIUM PUBLICATION & DISTRIBUTION METADATA (SEO / GEO / AEO)
-======================================================================
-• Story Title: The $300B Search Ad Dilemma: Why AI Chat is Killing Clicks, and How A2UI Brings Native Monetization to Any Chatbot
-• Subtitle: The "10 blue links" are dead. Here is how standardizing A2UI commercial components bridges conversational AI with sustainable ad revenue.
-• SEO Title (<60 chars): The $300B Search Ad Dilemma: Monetizing AI with A2UI
-• SEO Meta Description (<155 chars): Traditional search ads are dying in conversational AI. See how Google A2UI commercial components bring native, verified ad cards to any chatbot.
-• Recommended Medium Topics (5 tags): Artificial Intelligence, Adtech, Google, Software Architecture, Web Development
-• Reading Time: ~4 minutes (TL;DR Executive Edition)
-• Full Technical Edition: See docs/medium_article_full.md for the 10-minute deep dive.
-======================================================================
--->
+# The $300B Search Dilemma: Decoupling Commercial Components from LLM Reasoning in Conversational AI
 
-# The $300B Search Ad Dilemma: Why AI Chat is Killing Clicks, and How A2UI Brings Native Monetization to Any Chatbot
-
-*The "10 blue links" are dying in the conversational AI era. Here is how standardizing A2UI commercial components brings native, verified, and content-grounded ad monetization to any chatbot.*
+*The "10 blue links" are dying in the conversational AI era. Here is how standardizing A2UI commercial components bridges conversational agents with sustainable web economics.*
 
 ---
 
 ![A2UI Live Demo - Real-Time Streaming Conversational Search with Native Verified Sponsored Cards in Google ADK](images/a2ui_live_demo.gif)
-*Figure 1: Live multi-turn conversational search rendering organic synthesis alongside native, verified A2UI v0.9 Sponsored Cards.*
+*Figure 1: Live multi-turn conversational search rendering organic synthesis alongside native, verified A2UI v0.9 Sponsored Cards. (Image by author)*
 
 ---
 
@@ -39,7 +25,7 @@ For nearly three decades, performance advertising was the undisputed revenue eng
 * **The "10 Blue Links" Mechanism:** Users entered keywords, saw sponsored text ads, and clicked through to external sites—funding publishers, merchants, and search engines alike.
 
 ![Traditional Search Engine Paradigm - Web 1.0 and 2.0 Query-Driven CPC Search Ad Model](images/paradigm_traditional_search.png)
-*Figure 2: The classic Web 1.0/2.0 search engine revenue model: users type keywords, view SERP ads, and click out to external web pages.*
+*Figure 2: The classic Web 1.0/2.0 search engine revenue model: users type keywords, view SERP ads, and click out to external web pages. (Diagram by author)*
 
 **Then conversational AI arrived.**
 
@@ -71,12 +57,12 @@ Originally pioneered by Google as an open specification ([google/a2ui](https://g
 By extending A2UI with standardized commercial primitives (**`SponsoredCard`** and **`AdBanner`**), we decouple reasoning from advertising:
 
 ![Conversational A2UI Paradigm - Decoupled Multi-Agent Architecture with Vickrey Auction and Zero-Ad Gating](images/paradigm_conversational_a2ui.png)
-*Figure 3: The Conversational A2UI Paradigm: Decoupling neutral organic research from real-time ad auctions, enforcing zero-ad educational gating, and emitting standardized UI surfaces across any chat platform.*
+*Figure 3: The Conversational A2UI Paradigm: Decoupling neutral organic research from real-time ad auctions, enforcing zero-ad educational gating, and emitting standardized UI surfaces across any chat platform. (Diagram by author)*
 
 #### Core Architectural Pillars:
 1. **Decoupled Neutral Reasoning:** The core synthesis agent focuses 100% of its attention on providing neutral, objective, citation-backed answers. It never alters its recommendations for advertisers.
 2. **Content-Grounded Educational Gating:** The intent classifier evaluates user intent. Academic, conceptual, and casual prompts enforce **strict zero-ad gating** (0 ads served, containers completely hidden).
-3. **Real-Time Vickrey Second-Price RTB:** When commercial intent is verified, a real-time auction pulls live, verified merchant ads (via SerpApi Google Shopping / Ads or DSP inventory) and clears at a fair market price.
+3. **Real-Time Vickrey Second-Price RTB:** When commercial intent is verified, a real-time auction pulls live, verified merchant ads and clears at a fair market price.
 4. **Universal Interoperability:** Because it emits canonical A2UI JSON, **any chat application—Claude, Gemini, ChatGPT, Grok, or a custom frontend—renders the components natively without changing backend weights or fine-tuning:**
 
 ```json
@@ -95,10 +81,10 @@ By extending A2UI with standardized commercial primitives (**`SponsoredCard`** a
     {
       "id": "sponsored_section", "component": "SponsoredCard",
       "properties": {
-        "title": "Pre-Owned Patek Philippe Watches",
-        "advertiser": "The 1916 Company",
-        "displayUrl": "www.the1916company.com",
-        "targetUrl": "https://www.the1916company.com/patek-philippe",
+        "title": "Pre-Owned Timepieces & Horology Guide",
+        "advertiser": "Verified Horology Partner",
+        "displayUrl": "merchant.example.com",
+        "targetUrl": "https://merchant.example.com/timepieces",
         "badgeText": "Sponsored",
         "ctaText": "Visit Site"
       }
@@ -109,31 +95,31 @@ By extending A2UI with standardized commercial primitives (**`SponsoredCard`** a
 
 ---
 
-### 4. Visual Proof: 3 Real-World Scenarios
+### 4. Experimental Evaluation: 3 Real-World Scenarios
 
-We tested this architecture on a live, multi-turn conversational search engine deployed on Vercel:
-* **Live Hosted Demo:** [https://a2ui-ad-component.vercel.app](https://a2ui-ad-component.vercel.app)
-* **Archival Research Paper:** [Zenodo DOI: 10.5281/zenodo.23872614](https://doi.org/10.5281/zenodo.23872614)
+We evaluated this architecture across diverse multi-turn conversational interaction patterns:
+* **Open-Source Research Archive:** [Zenodo DOI: 10.5281/zenodo.23872614](https://doi.org/10.5281/zenodo.23872614)
+* **Specification Reference:** [Google A2UI Repository](https://github.com/google/a2ui)
 
 ---
 
-#### Scenario A: High Commercial Intent (Luxury Watches)
+#### Scenario A: High Commercial Intent (Consumer Products)
 > *Query: "suggest me top 10 watch list"*
 
-The system synthesizes an unbiased horological guide and renders **three verified A2UI Sponsored Cards** below the answer with verified merchant domains and direct call-to-action buttons:
+The system synthesizes an unbiased horological guide and renders **three verified A2UI Sponsored Cards** below the answer with transparent merchant disclosures and direct navigation buttons:
 
 ![High Intent Commercial Ad Cards - Real-Time Horology Search Displaying A2UI v0.9 Verified Sponsored Cards](images/luxury_watches_ad_cards.png)
-*Figure 4: High-intent commercial query displaying organic research alongside clean, transparently labeled A2UI Sponsored Cards.*
+*Figure 4: High-intent commercial query displaying organic research alongside clean, transparently labeled A2UI Sponsored Cards. (Image by author)*
 
 ---
 
-#### Scenario B: Developer SaaS & Infrastructure
+#### Scenario B: Developer SaaS & Cloud Infrastructure
 > *Query: "Let's look into various agentic frameworks"*
 
-The model provides an architectural summary of AutoGen, CrewAI, and LangGraph. Simultaneously, the auction surfaces verified enterprise developer tools (Gravitee, Stack AI, Mintlify) as contextual utilities rather than disruptive popups:
+The model provides an architectural summary of AutoGen, CrewAI, and LangGraph. Simultaneously, the auction surfaces verified enterprise developer infrastructure (such as API management, orchestration platforms, and documentation hubs) as contextual utilities rather than disruptive popups:
 
 ![Agentic Software Ads - Developer Tool Query Triggering Contextual Enterprise A2UI SaaS Cards](images/commercial_agentic_ads_cards.png)
-*Figure 5: SaaS and developer tool query triggering contextually relevant enterprise sponsor cards.*
+*Figure 5: Enterprise developer tooling query triggering contextually relevant technical service cards. (Image by author)*
 
 ---
 
@@ -143,7 +129,7 @@ The model provides an architectural summary of AutoGen, CrewAI, and LangGraph. S
 When queries are academic, scientific, or casual, the system enforces **strict zero-ad gating**. The commercial surface is suppressed, delivering a 100% clean, distraction-free response:
 
 ![Educational Zero-Ad Gating - Conceptual Query Triggering 100% Organic Response with Ad Containers Suppressed](images/educational_zero_ad_gating.png)
-*Figure 6: Non-commercial query triggering zero-ad gating. The response is 100% clean and organic.*
+*Figure 6: Non-commercial query triggering zero-ad gating. The response is 100% clean and organic. (Image by author)*
 
 ---
 
@@ -151,7 +137,7 @@ When queries are academic, scientific, or casual, the system enforces **strict z
 Every query, classified intent, quota meter, and clearing price is logged to an active SQLite telemetry stream, providing advertisers with transparent attribution without invasive user tracking:
 
 ![Real-Time Ad Audit Ledger - SQLite Telemetry Dashboard Tracking Intent Classification, Quotas, and Fair Second-Price Auctions](images/realtime_ad_telemetry_audit_log.png)
-*Figure 7: Live real-time telemetry dashboard monitoring API quotas, intent classification, and triggered ad impressions.*
+*Figure 7: Live real-time telemetry dashboard monitoring API quotas, intent classification, and triggered ad impressions. (Image by author)*
 
 ---
 
@@ -164,7 +150,6 @@ By adopting **standardized A2UI commercial components**, conversational AI gains
 ---
 
 ### Resources & Verification
-* **Live Hosted Application:** [https://a2ui-ad-component.vercel.app](https://a2ui-ad-component.vercel.app)
 * **Research Paper & Permanent Archive:** [DOI: 10.5281/zenodo.23872614](https://doi.org/10.5281/zenodo.23872614)
 * **Google A2UI Specification:** [GitHub Repository (google/a2ui)](https://github.com/google/a2ui)
 * **Market Outlook Data:** [Statista Search Advertising Worldwide Market Outlook](https://www.statista.com/outlook/dmo/digital-advertising/search-advertising/worldwide)

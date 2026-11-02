@@ -2,8 +2,8 @@ import json
 from unittest.mock import MagicMock
 import pytest
 from google.adk.agents import LlmAgent, LoopAgent, ParallelAgent, SequentialAgent
-from google_a2a_agent.agent import root_agent, benchmark_pipeline, search_ad_agent, organic_search_agent, contextual_ad_agent
-from google_a2a_agent.eval_agents import (
+from google_a2a_agent.agents.coordinator import root_agent, benchmark_pipeline, search_ad_agent, organic_search_agent, contextual_ad_agent
+from google_a2a_agent.agents.eval_agents import (
     ab_parallel_runner,
     audit_a2ui_payloads_tool,
     behavioral_drift_judge,
@@ -11,7 +11,7 @@ from google_a2a_agent.eval_agents import (
     schema_and_security_auditor,
     action_loop_tester,
 )
-from google_a2a_agent.sut_agents import mode_a_agent, mode_b_agent
+from google_a2a_agent.agents.sut_agents import mode_a_agent, mode_b_agent
 
 def test_pipeline_architecture():
     # Verify root_agent is the coordinated multi-agent system separating organic search from contextual ads

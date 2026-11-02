@@ -29,7 +29,7 @@ from google_a2a_agent.runner import (
 )
 
 # Ad Exchange & Auction exports
-from google_a2a_agent.auction.ad_sandbox import LocalAdExchangeSandbox, MOCK_CAMPAIGNS
+from google_a2a_agent.auction.ad_sandbox import LocalAdExchangeSandbox
 from google_a2a_agent.auction.ad_client import get_ad_network_client, classify_commercial_intent
 from google_a2a_agent.auction.callbacks import inject_a2ui_ad_callback, validate_a2ui_security_callback
 
@@ -61,7 +61,6 @@ __all__ = [
     "get_shared_runner",
     # Auction & Exchange
     "LocalAdExchangeSandbox",
-    "MOCK_CAMPAIGNS",
     "get_ad_network_client",
     "classify_commercial_intent",
     "inject_a2ui_ad_callback",

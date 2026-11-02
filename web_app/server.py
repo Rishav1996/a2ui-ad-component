@@ -16,7 +16,7 @@ from google_a2a_agent.runner import (
     stream_search_pipeline_async,
     sandbox,
 )
-from google_a2a_agent.ad_client import get_ad_network_client
+from google_a2a_agent.auction.ad_client import get_ad_network_client
 
 # Resolve static web directory
 STATIC_DIR = Path(__file__).resolve().parent / "static"
@@ -117,7 +117,7 @@ def click_endpoint(req: ClickRequest) -> dict[str, Any]:
 @app.get("/api/analytics")
 def analytics_endpoint() -> dict[str, Any]:
     """Returns the real-time Query-to-Ad stream log alongside live SerpApi & LLM quota health."""
-    from google_a2a_agent.quota_manager import quota_manager
+    from google_a2a_agent.governance.quota_manager import quota_manager
     audit_log = sandbox.get_query_audits(limit=50)
     quota_health = quota_manager.get_global_health()
     return {

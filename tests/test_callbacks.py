@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 import pytest
 from google.adk.models import LlmResponse
 from google.genai import types
-from google_a2a_agent.callbacks import (
+from google_a2a_agent.auction.callbacks import (
     AD_CATALOG_ID,
     inject_a2ui_ad_callback,
     validate_a2ui_security_callback,

@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
 from google.adk.agents import LlmAgent, SequentialAgent
-from google_a2a_agent.callbacks import inject_a2ui_ad_callback
-from google_a2a_agent.model_router import get_adk_model
-from google_a2a_agent.tools import (
+from google_a2a_agent.auction.callbacks import inject_a2ui_ad_callback
+from google_a2a_agent.governance.model_router import get_adk_model
+from google_a2a_agent.tools.ad_tools import (
     search_knowledge_tool,
     fetch_sponsored_cards_tool,
     dynamic_ad_search_tool,
@@ -69,7 +69,7 @@ contextual_ad_agent = LlmAgent(
     after_model_callback=inject_a2ui_ad_callback,
 )
 
-from google_a2a_agent.eval_agents import (
+from google_a2a_agent.agents.eval_agents import (
     ab_parallel_runner,
     schema_and_security_auditor,
     behavioral_drift_judge,

@@ -111,69 +111,41 @@ class A2uiSchemaManager:
             sponsored_card_schema, registry=self.registry
         )
 
-    def validate_ad_banner(self, component_node: dict[str, Any]) -> tuple[bool, list[str]]:
-        """
-        Validates an AdBanner component dict against the v0.9 schema.
-        """
-        ad_banner = component_node.get("AdBanner")
-        if not ad_banner or not isinstance(ad_banner, dict):
-            return False, ["Missing 'AdBanner' root key or payload is not a dictionary."]
+    def _validate_ad_component_common(
+        self,
+        component_node: dict[str, Any],
+        component_name: str,
+        validator: Draft202012Validator,
+    ) -> tuple[bool, list[str]]:
+        comp = component_node.get(component_name)
+        if not comp or not isinstance(comp, dict):
+            return False, [f"Missing '{component_name}' root key or payload is not a dictionary."]
 
         errors = []
-        for err in self.ad_banner_validator.iter_errors(ad_banner):
+        for err in validator.iter_errors(comp):
             errors.append(f"Validation error at path '{list(err.path)}': {err.message}")
 
-        # Enforce strict HTTPS URL check
-        action = ad_banner.get("onClickAction", {})
-        context = action.get("context", {})
-        target_url = context.get("targetUrl")
-        if isinstance(target_url, dict):
-            target_url_str = target_url.get("literalString", "")
-        else:
-            target_url_str = str(target_url or "")
-
+        action = comp.get("onClickAction", {})
+        context = action.get("context", {}) if isinstance(action, dict) else {}
+        target_url = context.get("targetUrl") if isinstance(context, dict) else ""
+        target_url_str = target_url.get("literalString", "") if isinstance(target_url, dict) else str(target_url or "")
         if target_url_str and not target_url_str.startswith("https://"):
             errors.append(f"Security violation: targetUrl must start with 'https://': {target_url_str}")
 
-        # Enforce disclosure check
-        disclosure = ad_banner.get("disclosureText")
+        disclosure = comp.get("disclosureText")
         disclosure_str = disclosure.get("literalString") if isinstance(disclosure, dict) else str(disclosure or "")
         if not disclosure_str or disclosure_str.strip().lower() not in ("sponsored", "ad", "promoted"):
             errors.append(f"Disclosure violation: disclosureText must be 'Sponsored', 'Ad', or 'Promoted'. Found: {disclosure_str}")
 
         return len(errors) == 0, errors
+
+    def validate_ad_banner(self, component_node: dict[str, Any]) -> tuple[bool, list[str]]:
+        """Validates an AdBanner component dict against the v0.9 schema."""
+        return self._validate_ad_component_common(component_node, "AdBanner", self.ad_banner_validator)
 
     def validate_sponsored_card(self, component_node: dict[str, Any]) -> tuple[bool, list[str]]:
-        """
-        Validates a SponsoredCard component dict against the v0.9 schema.
-        """
-        card = component_node.get("SponsoredCard")
-        if not card or not isinstance(card, dict):
-            return False, ["Missing 'SponsoredCard' root key or payload is not a dictionary."]
-
-        errors = []
-        for err in self.sponsored_card_validator.iter_errors(card):
-            errors.append(f"Validation error at path '{list(err.path)}': {err.message}")
-
-        # Enforce strict HTTPS URL check
-        action = card.get("onClickAction", {})
-        context = action.get("context", {})
-        target_url = context.get("targetUrl")
-        if isinstance(target_url, dict):
-            target_url_str = target_url.get("literalString", "")
-        else:
-            target_url_str = str(target_url or "")
-
-        if target_url_str and not target_url_str.startswith("https://"):
-            errors.append(f"Security violation: targetUrl must start with 'https://': {target_url_str}")
-
-        # Enforce disclosure check
-        disclosure = card.get("disclosureText")
-        disclosure_str = disclosure.get("literalString") if isinstance(disclosure, dict) else str(disclosure or "")
-        if not disclosure_str or disclosure_str.strip().lower() not in ("sponsored", "ad", "promoted"):
-            errors.append(f"Disclosure violation: disclosureText must be 'Sponsored', 'Ad', or 'Promoted'. Found: {disclosure_str}")
-
-        return len(errors) == 0, errors
+        """Validates a SponsoredCard component dict against the v0.9 schema."""
+        return self._validate_ad_component_common(component_node, "SponsoredCard", self.sponsored_card_validator)
 
     def validate_surface(self, payload: dict[str, Any]) -> dict[str, Any]:
         """

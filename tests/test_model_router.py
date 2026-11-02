@@ -1,7 +1,7 @@
 import os
 from unittest.mock import patch
 import pytest
-from google_a2a_agent.model_router import get_adk_model, get_gemini_rate_limit_config, DEFAULT_GEMINI_MODEL
+from google_a2a_agent.governance.model_router import get_adk_model, get_gemini_rate_limit_config, DEFAULT_GEMINI_MODEL
 
 
 def test_google_genai_use_vertexai_is_false():
