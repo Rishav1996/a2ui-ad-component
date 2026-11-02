@@ -21,7 +21,7 @@ For nearly three decades, the financial foundation of the consumer internet rest
 
 A user typed a few keywords into a search bar, and the search engine returned a list of "ten blue links." Above and alongside those organic links sat sponsored text ads. Whenever an intent-rich user clicked a sponsored link—whether searching for *"best running shoes"*, *"cloud database hosting"*, or *"flights to Tokyo"*—the search engine earned a fee, the merchant acquired a customer, and content publishers captured downstream pageviews.
 
-This economic flywheel was not merely profitable; it built the modern web. According to official market research from [Statista Market Insights](https://www.statista.com/outlook/dmo/digital-advertising/search-advertising/worldwide), global search advertising spend reached **$316.3 billion in 2024** and is projected to surpass **$350 billion**. In Alphabet’s SEC filings alone, Google Search and related performance advertising reliably drive over **$175 billion** annually.
+This economic flywheel was not merely profitable; it built the modern web. According to official market research from [Statista Market Insights [1]](https://www.statista.com/outlook/dmo/digital-advertising/search-advertising/worldwide), global search advertising spend reached **$316.3 billion in 2024** and is projected to surpass **$350 billion**. In Alphabet’s SEC filings alone, Google Search and related performance advertising reliably drive over **$175 billion** annually.
 
 ![Traditional Search Engine Paradigm - Web 1.0 and 2.0 Query-Driven CPC Search Ad Model](images/paradigm_traditional_search.png)
 *Figure 2: The classic "10 blue links" search engine revenue model: users type keywords, view SERP ads, and click out to external web pages. (Diagram by author)*
@@ -36,7 +36,7 @@ The user gets what they wanted in seconds. But behind the scenes, the economic m
 2. **Ad Click-Through Collapse:** Traditional display banners and text ad units do not fit inside conversational bubbles. Early attempts to paste raw markdown URLs into LLM replies felt spammy, hallucinated fake promo codes, and degraded user trust.
 3. **Crushing Inference Costs:** Running inference on state-of-the-art models costs orders of magnitude more than indexing a static web page. Subscriptions ($20/month) hit a consumer ceiling, leaving massive free-tier user bases burning GPU compute without a sustainable monetization engine.
 
-As analyst firm [Gartner warned](https://www.gartner.com/en/newsroom/press-releases/2024-02-19-gartner-predicts-search-engine-volume-will-drop-25-percent-by-2026-due-to-ai-chatbots), traditional search engine volume is projected to drop 25% by 2026 as query share migrates toward AI conversational agents.
+As projected by [Gartner's search market analysis [2]](https://www.gartner.com/en/newsroom/press-releases/2024-02-19-gartner-predicts-search-engine-volume-will-drop-25-percent-by-2026-due-to-ai-chatbots), traditional search engine volume is projected to drop 25% by 2026 as query share migrates toward AI conversational agents.
 
 If search advertising cannot transition into the conversational era, the business model powering the free, open internet is in jeopardy.
 
@@ -63,7 +63,7 @@ To monetize conversational AI sustainably, advertising cannot be an afterthought
 
 Enter **A2UI (Agent-to-User Interface)**. 
 
-Originally spearheaded by Google as an open specification ([google/a2ui](https://github.com/google/a2ui)), A2UI defines a standardized declarative JSON protocol for AI agents to render rich, dynamic user interfaces—such as cards, carousels, forms, and interactive widgets—directly within client chat applications.
+Originally spearheaded by Google as an open specification ([google/a2ui [3]](https://github.com/google/a2ui)), A2UI defines a standardized declarative JSON protocol for AI agents to render rich, dynamic user interfaces—such as cards, carousels, forms, and interactive widgets—directly within client chat applications.
 
 By extending the canonical A2UI specification with standardized commercial components (**`AdBanner`** and **`SponsoredCard`**), we can introduce commercial monetization that is:
 * **Completely decoupled from organic reasoning:** The core LLM focuses 100% of its attention on researching and synthesizing objective, unbiased answers.
@@ -128,8 +128,8 @@ The chat application simply maps the incoming A2UI component IDs to its client d
 
 To evaluate how this decoupled architecture operates in a production environment, we tested a multi-turn conversational search engine built on Google ADK and A2UI:
 
-* **Open-Source Research Archive:** [Zenodo DOI: 10.5281/zenodo.23872614](https://doi.org/10.5281/zenodo.23872614)
-* **Specification Reference:** [Google A2UI Repository](https://github.com/google/a2ui)
+* **Open-Source Research Archive:** [Zenodo DOI: 10.5281/zenodo.23872614 [4]](https://doi.org/10.5281/zenodo.23872614)
+* **Specification Reference:** [Google A2UI Repository [3]](https://github.com/google/a2ui)
 
 Let's examine three distinct real-world scenarios that showcase why this model succeeds where prior attempts failed.
 
@@ -254,9 +254,9 @@ The transition from the "10 blue links" to conversational AI does not have to me
 
 ---
 
-### Resources & Verification
+### References & Verification
 
-* **Research Paper & Permanent Archive:** [DOI: 10.5281/zenodo.23872614](https://doi.org/10.5281/zenodo.23872614)
-* **Google A2UI Specification:** [GitHub Repository (google/a2ui)](https://github.com/google/a2ui)
-* **Market Reference:** [Statista Search Advertising Worldwide Market Outlook](https://www.statista.com/outlook/dmo/digital-advertising/search-advertising/worldwide)
-* **Industry Analysis:** [Gartner Search Engine Volume Predictions](https://www.gartner.com/en/newsroom/press-releases/2024-02-19-gartner-predicts-search-engine-volume-will-drop-25-percent-by-2026-due-to-ai-chatbots)
+* **[1] Market Outlook Data:** [Statista Search Advertising Worldwide Market Outlook](https://www.statista.com/outlook/dmo/digital-advertising/search-advertising/worldwide)
+* **[2] Industry Analysis:** [Gartner Search Volume Predictions](https://www.gartner.com/en/newsroom/press-releases/2024-02-19-gartner-predicts-search-engine-volume-will-drop-25-percent-by-2026-due-to-ai-chatbots)
+* **[3] Google A2UI Specification:** [GitHub Repository (google/a2ui)](https://github.com/google/a2ui)
+* **[4] Research Paper & Permanent Archive:** [Zenodo DOI: 10.5281/zenodo.23872614](https://doi.org/10.5281/zenodo.23872614)

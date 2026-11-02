@@ -21,7 +21,7 @@
 ### 1. The Ground Reality: Why AI Chat Kills Ad Clicks
 
 For nearly three decades, performance advertising was the undisputed revenue engine of the web:
-* **The $316B+ Market:** According to [Statista Market Insights](https://www.statista.com/outlook/dmo/digital-advertising/search-advertising/worldwide), global search advertising spend reached **$316.3 billion in 2024** and is scaling past **$350 billion**. Alphabet's SEC 10-K filings consistently report over **$175 billion** in annual Google Search ad revenues alone.
+* **The $316B+ Market:** According to [Statista Market Insights [1]](https://www.statista.com/outlook/dmo/digital-advertising/search-advertising/worldwide), global search advertising spend reached **$316.3 billion in 2024** and is scaling past **$350 billion**. Alphabet's SEC 10-K filings consistently report over **$175 billion** in annual Google Search ad revenues alone.
 * **The "10 Blue Links" Mechanism:** Users entered keywords, saw sponsored text ads, and clicked through to external sites—funding publishers, merchants, and search engines alike.
 
 ![Traditional Search Engine Paradigm - Web 1.0 and 2.0 Query-Driven CPC Search Ad Model](images/paradigm_traditional_search.png)
@@ -31,7 +31,7 @@ For nearly three decades, performance advertising was the undisputed revenue eng
 
 Instead of browsing links, users now receive direct, synthesized answers from LLMs. The user experience is vastly superior, but the economic model is fundamentally broken:
 1. **The Zero-Click Crisis:** Users never leave the chat window. There are no search results pages (SERPs) and no publisher pageviews.
-2. **25% Search Volume Displacement:** As [Gartner warned](https://www.gartner.com/en/newsroom/press-releases/2024-02-19-gartner-predicts-search-engine-volume-will-drop-25-percent-by-2026-due-to-ai-chatbots), traditional search engine volume will decline 25% by 2026 as queries shift to AI conversational agents.
+2. **25% Search Volume Displacement:** As projected in [Gartner's search market analysis [2]](https://www.gartner.com/en/newsroom/press-releases/2024-02-19-gartner-predicts-search-engine-volume-will-drop-25-percent-by-2026-due-to-ai-chatbots), traditional search engine volume will decline 25% by 2026 as queries shift to AI conversational agents.
 3. **The Compute Unit Economics Trap:** Delivering LLM tokens costs orders of magnitude more than serving static search links. Subscriptions ($20/month) hit a consumer ceiling, leaving millions of free-tier users burning compute with zero monetization.
 
 ---
@@ -52,7 +52,7 @@ Advertising in generative AI cannot be an afterthought forced into model tokens.
 
 ### 3. The Fix: The A2UI Commercial Extension
 
-Originally pioneered by Google as an open specification ([google/a2ui](https://github.com/google/a2ui)), **A2UI (Agent-to-User Interface)** defines a declarative, adjacency-list JSON standard for AI agents to render rich, dynamic components within client interfaces.
+Originally pioneered by Google as an open specification ([google/a2ui [3]](https://github.com/google/a2ui)), **A2UI (Agent-to-User Interface)** defines a declarative, adjacency-list JSON standard for AI agents to render rich, dynamic components within client interfaces.
 
 By extending A2UI with standardized commercial primitives (**`SponsoredCard`** and **`AdBanner`**), we decouple reasoning from advertising:
 
@@ -98,8 +98,8 @@ By extending A2UI with standardized commercial primitives (**`SponsoredCard`** a
 ### 4. Experimental Evaluation: 3 Real-World Scenarios
 
 We evaluated this architecture across diverse multi-turn conversational interaction patterns:
-* **Open-Source Research Archive:** [Zenodo DOI: 10.5281/zenodo.23872614](https://doi.org/10.5281/zenodo.23872614)
-* **Specification Reference:** [Google A2UI Repository](https://github.com/google/a2ui)
+* **Open-Source Research Archive:** [Zenodo DOI: 10.5281/zenodo.23872614 [4]](https://doi.org/10.5281/zenodo.23872614)
+* **Specification Reference:** [Google A2UI Repository [3]](https://github.com/google/a2ui)
 
 ---
 
@@ -149,8 +149,8 @@ By adopting **standardized A2UI commercial components**, conversational AI gains
 
 ---
 
-### Resources & Verification
-* **Research Paper & Permanent Archive:** [DOI: 10.5281/zenodo.23872614](https://doi.org/10.5281/zenodo.23872614)
-* **Google A2UI Specification:** [GitHub Repository (google/a2ui)](https://github.com/google/a2ui)
-* **Market Outlook Data:** [Statista Search Advertising Worldwide Market Outlook](https://www.statista.com/outlook/dmo/digital-advertising/search-advertising/worldwide)
-* **Industry Analysis:** [Gartner Search Volume Predictions](https://www.gartner.com/en/newsroom/press-releases/2024-02-19-gartner-predicts-search-engine-volume-will-drop-25-percent-by-2026-due-to-ai-chatbots)
+### References & Verification
+* **[1] Market Outlook Data:** [Statista Search Advertising Worldwide Market Outlook](https://www.statista.com/outlook/dmo/digital-advertising/search-advertising/worldwide)
+* **[2] Industry Analysis:** [Gartner Search Volume Predictions](https://www.gartner.com/en/newsroom/press-releases/2024-02-19-gartner-predicts-search-engine-volume-will-drop-25-percent-by-2026-due-to-ai-chatbots)
+* **[3] Google A2UI Specification:** [GitHub Repository (google/a2ui)](https://github.com/google/a2ui)
+* **[4] Research Paper & Permanent Archive:** [Zenodo DOI: 10.5281/zenodo.23872614](https://doi.org/10.5281/zenodo.23872614)
