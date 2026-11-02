@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "a2ui-ad-component",
     "public": "web_app/static",
     "ignore": [
       "firebase.json",
@@ -7,13 +8,6 @@
       "**/node_modules/**"
     ],
     "rewrites": [
-      {
-        "source": "/api/**",
-        "run": {
-          "serviceId": "a2ui-ad-analytics",
-          "region": "us-central1"
-        }
-      },
       {
         "source": "**",
         "destination": "/index.html"
