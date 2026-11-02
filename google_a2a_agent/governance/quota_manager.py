@@ -1,9 +1,11 @@
 import json
 import os
 import sqlite3
+import tempfile
 import time
 import urllib.request
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Optional
 from dotenv import load_dotenv
 
@@ -131,7 +133,8 @@ class QuotaManager:
         tokens_used_today = 0
         requests_used_month = 0
 
-        db_path = os.getenv("AD_TELEMETRY_DB_PATH", "ad_telemetry.db")
+        temp_db = str(Path(tempfile.gettempdir()) / "ad_telemetry.db")
+        db_path = os.getenv("AD_TELEMETRY_DB_PATH") or (temp_db if (os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME")) else "ad_telemetry.db")
         if os.path.exists(db_path):
             try:
                 today_midnight = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp()

@@ -3,11 +3,26 @@ import json
 import os
 import sqlite3
 import time
+import tempfile
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Optional
 
-DEFAULT_DB_PATH = Path(os.getenv("AD_TELEMETRY_DB_PATH", "ad_telemetry.db"))
+def _resolve_default_db_path() -> Path:
+    env_path = os.getenv("AD_TELEMETRY_DB_PATH")
+    if env_path:
+        return Path(env_path)
+    if os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+        return Path(tempfile.gettempdir()) / "ad_telemetry.db"
+    try:
+        test_file = Path("ad_telemetry_test.tmp")
+        test_file.touch()
+        test_file.unlink()
+        return Path("ad_telemetry.db")
+    except (PermissionError, OSError):
+        return Path(tempfile.gettempdir()) / "ad_telemetry.db"
+
+DEFAULT_DB_PATH = _resolve_default_db_path()
 
 # 1. Expanded Real-Time Programmatic Ad Inventory (Zero-Setup DSP Catalog)
 MOCK_CAMPAIGNS: list[dict[str, Any]] = [

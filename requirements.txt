@@ -6,3 +6,4 @@ duckduckgo-search>=8.1.1
 jsonschema>=4.26.0
 python-dotenv>=1.0.0
 requests>=2.31.0
+
