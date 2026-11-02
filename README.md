@@ -103,11 +103,13 @@ This framework benchmarks two architectural paradigms for generative UI monetiza
 
 ```
 .
-├── .agents/skills/                    # Modular Google ADK Skills & Rules
-│   ├── a2ui-v09-catalog-builder/      # A2UI catalog & schema authoring rules
-│   ├── adk-a2ui-callback-injector/    # Native ADK hook ad injection rules
-│   ├── adk-hybrid-model-router/       # Model routing (Ollama/LiteLlm & Gemini)
-│   └── adk-multiagent-benchmarker/    # Multi-agent benchmark orchestration
+├── .agents/                           # Modular Google ADK Skills & Rules
+│   ├── rules/                         # Workspace guardrails (no-dummy-data, sync-documentation)
+│   └── skills/                        # Multi-agent specialized skills
+│       ├── a2ui-v09-catalog-builder/  # A2UI catalog & schema authoring rules
+│       ├── adk-a2ui-callback-injector/# Native ADK hook ad injection rules
+│       ├── adk-hybrid-model-router/   # Model routing (Ollama/LiteLlm & Gemini)
+│       └── adk-multiagent-benchmarker/# Multi-agent benchmark orchestration
 ├── catalogs/                          # Canonical A2UI v0.9 Component Specifications
 │   ├── ad_catalog.json                # AdBanner & SponsoredCard extension catalog
 │   ├── common_types.json              # Canonical common types ($defs)

@@ -9,7 +9,7 @@ Welcome to the **A2UI v0.9 Ad Component & Google ADK Multi-Agent Engine** reposi
 ```
 a2ui-ad-component/
 ├── .agents/                           # Agentic skills & guardrail rules
-│   ├── rules/                         # No-dummy-data and security rules
+│   ├── rules/                         # Workspace guardrails (no-dummy-data, sync-documentation)
 │   └── skills/                        # ADK custom skill definitions
 │       ├── a2ui-v09-catalog-builder/  # Rules for authoring A2UI v0.9 JSON catalogs
 │       ├── adk-a2ui-callback-injector/# Rules for deterministic ADK hook injection
@@ -53,7 +53,7 @@ a2ui-ad-component/
 │   ├── runner.py                      # Singleton ADK InMemoryRunner & SSE stream generator
 │   └── __init__.py                    # Public API exports (100% backward-compatible)
 │
-├── tests/                             # Comprehensive Pytest Suite (31 unit tests)
+├── tests/                             # Comprehensive Pytest Suite (49 unit tests)
 │   ├── conftest.py                    # Pytest fixtures & environment setup
 │   ├── test_ad_sandbox.py             # Auction logic, impression logging, and clicks
 │   ├── test_api_endpoints.py          # FastAPI endpoint integration tests
@@ -92,11 +92,11 @@ a2ui-ad-component/
 This is the heart of the backend. It implements the Google ADK multi-agent pipeline and the ad auction engine:
 
 - **`google_a2a_agent/auction/`**:
-  - `ad_client.py`: Connects to SerpApi to retrieve live Google Shopping and search ads. Falls back gracefully to local DSP mock campaigns if SerpApi is unconfigured or exhausted.
-  - `ad_sandbox.py`: Manages the local SQLite ledger (`query_ad_audit` table) and computes the second-price Vickrey clearing price ($P_1 = \text{Bid}_2 + \text{₹1.00}$).
-  - `callbacks.py`: Contains the `after_model_callback` hook that intercepts the agent output and injects verified sponsored cards into the A2UI surface.
+  - `ad_client.py`: Connects to SerpApi to retrieve live Google Shopping and search ads. Uses generalized intent classification heuristics without hardcoded 150-word dictionaries, falling back gracefully to local DSP mock campaigns if SerpApi is unconfigured or exhausted.
+  - `ad_sandbox.py`: Manages the local SQLite ledger (`query_ad_audit` table), computes the second-price Vickrey clearing price ($P_1 = \text{Bid}_2 + \text{₹1.00}$), and adapts ad copy and partner badges dynamically based on query intent.
+  - `callbacks.py`: Contains the `after_model_callback` hook that intercepts the agent output, parses model intent and category tags, and injects verified sponsored cards into the A2UI surface.
 - **`google_a2a_agent/agents/`**:
-  - `coordinator.py`: Connects the `organic_search_agent` and `contextual_ad_agent` into a unified `SequentialAgent`.
+  - `coordinator.py`: Connects `organic_search_agent` and `contextual_ad_agent` into a unified `SequentialAgent`. Powers autonomous prompt-driven intent evaluation and dynamic snake_case category coining without dictionary bounds.
   - `eval_agents.py`: Evaluator agents (`SchemaAuditor`, `BehavioralJudge`, `ActionLoopTester`) for benchmarking.
   - `sut_agents.py`: Defines the System-Under-Test agents (Mode A vs Mode B).
 - **`google_a2a_agent/governance/`**:
@@ -153,5 +153,5 @@ The production web interface:
 ```powershell
 .venv\Scripts\pytest tests
 ```
-All 31 unit tests will run, covering schemas, auctions, hooks, and multi-agent coordination.
+All 49 unit tests will run, covering schemas, auctions, hooks, and multi-agent coordination.
 

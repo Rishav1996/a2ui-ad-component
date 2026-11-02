@@ -39,3 +39,4 @@ Before concluding any task involving code modifications:
 - [ ] Determine which documentation files in `README.md` or `docs/` describe those modules.
 - [ ] Update the documentation with exact, truthful descriptions matching the new implementation.
 - [ ] Ensure all diagrams, code blocks, and references remain valid and accurate.
+

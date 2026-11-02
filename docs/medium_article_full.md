@@ -80,6 +80,7 @@ Originally spearheaded by Google as an open specification ([google/a2ui](https:/
 
 By extending the canonical A2UI specification with standardized commercial components (**`AdBanner`** and **`SponsoredCard`**), we can introduce commercial monetization that is:
 * **Completely decoupled from organic reasoning:** The core LLM focuses 100% of its attention on researching and synthesizing objective, unbiased answers.
+* **Autonomous and Prompt-Driven:** Replaces static, brittle keyword dictionaries with dynamic LLM agent evaluation to classify intent, extract commercial entities, and coin categories on the fly across any industry.
 * **Deterministic and verified:** Ad cards are backed by real-time ad network data, verified merchant URLs, and transparent disclosure badges.
 * **Content-grounded and intent-aware:** Educational and non-commercial queries strictly trigger **zero-ad gating**, while commercial queries display rich, interactive cards.
 
