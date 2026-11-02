@@ -71,9 +71,13 @@ a2ui-ad-component/
 │       ├── styles.css                 # Glassmorphic CSS design system
 │       └── app.js                     # Real-time SSE streaming & quota meters
 │
+├── api/                               # Vercel Serverless Function entrypoint
+│   └── index.py                       # ASGI handler & cross-platform scratch DB configuration
 ├── Dockerfile                         # Production containerization
 ├── pyproject.toml                     # Python dependencies & build metadata
+├── requirements.txt                   # Lightweight production requirements
 ├── run_adk_server.py                  # Standalone FastAPI server launcher
+├── vercel.json                        # Vercel Serverless Function & routing configuration
 ├── LICENSE                            # Apache 2.0 Open-Source License
 ├── CITATION.cff                       # Citation File Format (CFF 1.2.0)
 ├── .zenodo.json                       # Zenodo archival configuration

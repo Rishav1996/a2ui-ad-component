@@ -11,6 +11,15 @@ function generateSessionId() {
   return `sess_${Math.random().toString(36).substring(2, 10)}`;
 }
 
+/**
+ * Dynamically resolves the API base URL.
+ * In unified hosting (Vercel or local), both UI and API run on the same origin,
+ * so relative paths ("") work seamlessly with zero CORS overhead.
+ */
+function getApiBaseUrl() {
+  return "";
+}
+
 // Initial setup on DOM ready
 document.addEventListener("DOMContentLoaded", () => {
   updateSessionDisplay();
@@ -212,7 +221,7 @@ async function submitMessage(query) {
   const gatingCard = document.getElementById(`gating-${turnId}`);
 
   try {
-    const streamUrl = `/api/chat/stream?query=${encodeURIComponent(query)}&session_id=${encodeURIComponent(currentSessionId)}`;
+    const streamUrl = `${getApiBaseUrl()}/api/chat/stream?query=${encodeURIComponent(query)}&session_id=${encodeURIComponent(currentSessionId)}`;
     const response = await fetch(streamUrl);
 
     if (!response.ok) {
@@ -400,7 +409,7 @@ function renderMarkdown(raw) {
 // ==============================================================================
 async function handleCardClick(event, sessionId, campaignId, targetUrl) {
   try {
-    fetch("/api/click", {
+    fetch(`${getApiBaseUrl()}/api/click`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -418,7 +427,7 @@ async function handleCardClick(event, sessionId, campaignId, targetUrl) {
 // ==============================================================================
 async function fetchAnalyticsData() {
   try {
-    const response = await fetch("/api/analytics");
+    const response = await fetch(`${getApiBaseUrl()}/api/analytics`);
     if (!response.ok) return;
 
     const data = await response.json();
@@ -601,7 +610,7 @@ function updateQuotaUI(quotaHealth) {
 async function handleResetAnalytics() {
   if (confirm("Are you sure you want to clear the query search log?")) {
     try {
-      await fetch("/api/analytics/reset", { method: "POST" });
+      await fetch(`${getApiBaseUrl()}/api/analytics/reset`, { method: "POST" });
       fetchAnalyticsData();
     } catch (e) {
       console.error("Failed to reset stream log:", e);

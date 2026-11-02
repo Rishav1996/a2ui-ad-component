@@ -1,5 +1,6 @@
 # A2UI v0.9 Commercial UI Extension & Multi-Agent Auction Engine in Google ADK
 
+[![Live Demo](https://img.shields.io/badge/Vercel-Live_Demo-black?logo=vercel&logoColor=white)](https://a2ui-ad-component.vercel.app)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23872614.svg)](https://doi.org/10.5281/zenodo.23872614)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13-blue.svg)](https://www.python.org/)
@@ -7,6 +8,8 @@
 [![A2UI Spec](https://img.shields.io/badge/A2UI%20Spec-v0.9-purple.svg)](https://github.com/google/a2ui)
 
 A production-grade Google Agent Development Kit (`google-adk`) multi-agent framework implementing and evaluating **A2UI v0.9 Commercial UI Components (`AdBanner` & `SponsoredCard`)**.
+
+**Live Hosted Demo:** [https://a2ui-ad-component.vercel.app](https://a2ui-ad-component.vercel.app)
 
 Features an end-to-end **Real-Time Contextual Ad Auction Engine** (second-price Vickrey RTB) with live SerpApi search ads retrieval, deterministic lifecycle callback hook injection, **content-grounded educational gating** (zero ads on purely conceptual/educational queries), continuous multi-turn conversational chat with real-time SSE token streaming, and dual API quota governance.
 
@@ -99,13 +102,17 @@ This framework benchmarks two architectural paradigms for generative UI monetiza
 │       ├── styles.css                 # Premium dark-mode glassmorphic design system
 │       └── app.js                     # Real-time SSE streaming, rendering & quota meters
 ├── tests/                             # Comprehensive Pytest Suite (31 unit tests)
+├── api/                               # Vercel Serverless Function entrypoint
+│   └── index.py                       # ASGI handler & cross-platform scratch DB configuration
 ├── .env.example                       # Clean environment variable template
 ├── .zenodo.json                       # Zenodo archival & DOI configuration
 ├── CITATION.cff                       # Citation File Format (CFF 1.2.0)
 ├── Dockerfile                         # Production container definition
 ├── LICENSE                            # Apache 2.0 Open-Source License
 ├── pyproject.toml                     # Python dependencies & build metadata
-└── run_adk_server.py                  # Standalone FastAPI server launcher
+├── requirements.txt                   # Lightweight production requirements
+├── run_adk_server.py                  # Standalone FastAPI server launcher
+└── vercel.json                        # Vercel Serverless Function & routing configuration
 ```
 
 > 📖 **Developer Guides**:
