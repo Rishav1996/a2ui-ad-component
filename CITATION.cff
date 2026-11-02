@@ -12,7 +12,7 @@ url: "https://github.com/Rishav1996/a2ui-ad-component"
 license: Apache-2.0
 version: 0.1.0
 date-released: 2026-11-02
-doi: "10.5281/zenodo.21634891"
+doi: "10.5281/zenodo.23872615"
 abstract: >
   A production-grade Google Agent Development Kit (google-adk) framework implementing
   and evaluating A2UI v0.9 commercial user interface components (AdBanner and SponsoredCard).
@@ -46,7 +46,8 @@ preferred-citation:
     - family-names: "Saigal"
       given-names: "Rishav"
       orcid: "https://orcid.org/0009-0005-5548-3016"
-  doi: "10.5281/zenodo.21634891"
+  doi: "10.5281/zenodo.23872615"
   month: 11
   title: "A2UI Ad Component: Non-Intrusive Sponsored Generative UI & Multi-Agent Auction Engine in Google ADK"
   year: 2026
+

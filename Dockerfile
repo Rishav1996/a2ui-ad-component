@@ -38,3 +38,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
 
 # Launch FastAPI ASGI server
 CMD ["python", "run_adk_server.py"]
+

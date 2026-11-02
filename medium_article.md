@@ -5,7 +5,7 @@
 **By Rishav Saigal**  
 *November 2026 • AI Engineering & Multi-Agent Systems*
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21634891.svg)](https://doi.org/10.5281/zenodo.21634891)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23872615.svg)](https://doi.org/10.5281/zenodo.23872615)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Google ADK](https://img.shields.io/badge/Google%20ADK-2.13.0-orange.svg)](https://github.com/google/agent-development-kit)
 [![A2UI Spec](https://img.shields.io/badge/A2UI%20Spec-v0.9-purple.svg)](https://github.com/google/a2ui)
@@ -232,7 +232,7 @@ Across a test suite of 31 unit tests and multi-agent simulation runs, the callba
 All code, schemas, and tests are open-sourced under the **Apache 2.0 License**:
 
 - **GitHub Repository**: [https://github.com/Rishav1996/a2ui-ad-component](https://github.com/Rishav1996/a2ui-ad-component)
-- **Zenodo DOI**: [10.5281/zenodo.21634891](https://doi.org/10.5281/zenodo.21634891)
+- **Zenodo DOI**: [10.5281/zenodo.23872615](https://doi.org/10.5281/zenodo.23872615)
 
 If you use this architecture or cite its auction framework in your research, cite it as:
 
@@ -244,7 +244,7 @@ If you use this architecture or cite its auction framework in your research, cit
   year         = 2026,
   publisher    = {Zenodo},
   version      = {0.1.0},
-  doi          = {10.5281/zenodo.21634891},
+  doi          = {10.5281/zenodo.23872615},
   url          = {https://github.com/Rishav1996/a2ui-ad-component}
 }
 ```
@@ -252,3 +252,4 @@ If you use this architecture or cite its auction framework in your research, cit
 ---
 
 *Questions or thoughts on Generative UI monetization? Feel free to connect on GitHub or leave a comment below!*
+
