@@ -11,7 +11,7 @@ A production-grade Google Agent Development Kit (`google-adk`) multi-agent frame
 
 **Live Hosted Demo:** [https://a2ui-ad-component.vercel.app](https://a2ui-ad-component.vercel.app)
 
-Features an end-to-end **Real-Time Contextual Ad Auction Engine** (second-price Vickrey RTB) with live SerpApi search ads retrieval, deterministic lifecycle callback hook injection, **content-grounded educational gating** (zero ads on purely conceptual/educational queries), continuous multi-turn conversational chat with real-time SSE token streaming, and dual API quota governance.
+Features an end-to-end **Real-Time Contextual Ad Auction Engine** (second-price Vickrey RTB) with live SerpApi search ads retrieval, deterministic lifecycle callback hook injection, **dynamic LLM prompt-driven commercial intent and category extraction** (eliminating static keyword dictionaries), **content-grounded educational gating** (zero ads on purely conceptual/educational queries), continuous multi-turn conversational chat with real-time SSE token streaming, and dual API quota governance.
 
 ---
 
@@ -236,7 +236,7 @@ If you use this repository, its A2UI v0.9 ad extension schemas, or its multi-age
   month        = nov,
   year         = 2026,
   publisher    = {Zenodo},
-  version      = {0.1.3},
+  version      = {0.1.4},
   doi          = {10.5281/zenodo.23872614},
   url          = {https://github.com/Rishav1996/a2ui-ad-component}
 }
