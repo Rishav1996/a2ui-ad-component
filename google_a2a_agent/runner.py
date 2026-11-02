@@ -178,7 +178,7 @@ async def stream_search_pipeline_async(query: str, session_id: Optional[str] = N
 
         surface_payload = state.get("a2ui_surface")
         if not surface_payload or not is_commercial:
-            surface_payload = build_a2ui_search_surface(clean_query, gist, winning_cards)
+            surface_payload = build_a2ui_search_surface(clean_query, gist, winning_cards, include_ad_banner=True)
 
         # Estimate tokens used for multi-agent reasoning, search synthesis, and ad evaluation
         estimated_tokens = max(250, (len(clean_query) + len(organic_raw) + len(ad_agent_raw) + 1200) // 4)
@@ -202,6 +202,7 @@ async def stream_search_pipeline_async(query: str, session_id: Optional[str] = N
             "sources": sources,
             "intent_category": category,
             "is_commercial": is_commercial,
+            "ad_banner": winning_cards[0] if winning_cards else None,
             "cards_count": len(winning_cards),
             "cards": winning_cards,
             "a2ui_surface": surface_payload,
@@ -245,6 +246,7 @@ async def execute_search_pipeline_async(query: str, session_id: Optional[str] = 
         "sources": [],
         "intent_category": "general",
         "is_commercial": False,
+        "ad_banner": None,
         "cards_count": 0,
         "cards": [],
         "a2ui_surface": None,
@@ -286,7 +288,7 @@ def execute_search_pipeline(query: str, session_id: Optional[str] = None) -> dic
             ]
         else:
             winning_cards = []
-        surface_payload = build_a2ui_search_surface(clean_query, gist, winning_cards)
+        surface_payload = build_a2ui_search_surface(clean_query, gist, winning_cards, include_ad_banner=True)
         sandbox.log_query_audit(
             session_id=sess_id,
             query_text=clean_query,
@@ -303,6 +305,7 @@ def execute_search_pipeline(query: str, session_id: Optional[str] = None) -> dic
             "sources": [],
             "intent_category": category,
             "is_commercial": is_commercial,
+            "ad_banner": winning_cards[0] if winning_cards else None,
             "cards_count": len(winning_cards),
             "cards": winning_cards,
             "a2ui_surface": surface_payload,

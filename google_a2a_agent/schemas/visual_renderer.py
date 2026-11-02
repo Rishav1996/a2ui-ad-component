@@ -82,14 +82,47 @@ def build_sponsored_card_node(camp: dict[str, Any], idx: int) -> Optional[dict[s
     }
 
 
+def build_ad_banner_node(camp: dict[str, Any], idx: int = 0) -> Optional[dict[str, Any]]:
+    """Builds a canonical A2UI v0.9 AdBanner component node dictionary."""
+    t_url = camp.get("target_url", "")
+    m_url = camp.get("media_url", "")
+    if not t_url.startswith("https://"):
+        return None
+    if m_url and not m_url.startswith("https://"):
+        m_url = ""
+
+    return {
+        "id": f"ad_banner_{idx+1}_{camp.get('campaign_id', idx)}",
+        "component": {
+            "AdBanner": {
+                "sponsorName": {"literalString": camp.get("sponsor_name", "Sponsor")},
+                "headline": {"literalString": camp.get("headline", "")},
+                "bodyText": {"literalString": camp.get("body", "")},
+                "ctaLabel": {"literalString": camp.get("cta_label", "Learn More")},
+                "disclosureText": {"literalString": camp.get("disclosure", "Sponsored")},
+                "mediaUrl": {"literalString": m_url},
+                "onClickAction": {
+                    "name": "apply_sponsored_offer",
+                    "context": {
+                        "targetUrl": {"literalString": t_url},
+                        "campaignId": {"literalString": str(camp.get("campaign_id", f"camp_{idx}"))},
+                        "promoCode": {"literalString": camp.get("promo_code", "ADK_PROMO")},
+                    },
+                },
+            }
+        },
+    }
+
+
 def build_a2ui_search_surface(
     query_text: str,
     gist_text: str,
     cards: list[dict[str, Any]],
+    include_ad_banner: bool = False,
 ) -> dict[str, Any]:
     """
     Builds a canonical A2UI v0.9 `createSurface` dictionary containing the
-    organic search gist components and the 3 SponsoredCard components.
+    organic search gist components, optional hero AdBanner, and SponsoredCard components.
     """
     components: list[dict[str, Any]] = [
         {
@@ -110,6 +143,11 @@ def build_a2ui_search_surface(
             },
         },
     ]
+
+    if include_ad_banner and cards:
+        banner_node = build_ad_banner_node(cards[0], 0)
+        if banner_node:
+            components.append(banner_node)
 
     for idx, camp in enumerate(cards):
         node = build_sponsored_card_node(camp, idx)

@@ -1,6 +1,6 @@
 [project]
 name = "a2ui-ad-component"
-version = "0.1.7"
+version = "0.1.8"
 description = "A2UI v0.9 Commercial UI Extension & Multi-Agent Test Suite in Google ADK"
 readme = "README.md"
 authors = [

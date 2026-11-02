@@ -238,7 +238,7 @@ If you use this repository, its A2UI v0.9 ad extension schemas, or its multi-age
   month        = nov,
   year         = 2026,
   publisher    = {Zenodo},
-  version      = {0.1.7},
+  version      = {0.1.8},
   doi          = {10.5281/zenodo.23872614},
   url          = {https://github.com/Rishav1996/a2ui-ad-component}
 }

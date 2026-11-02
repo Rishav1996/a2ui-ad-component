@@ -195,8 +195,15 @@ async function submitMessage(query) {
               <span class="pill-badge sponsored-badge">A2UI v0.9 Verified Sponsors</span>
               <h4 class="turn-sponsored-title">Sponsored Recommendations</h4>
             </div>
+            <div class="sponsored-view-toggle" id="view-toggle-${turnId}">
+              <button class="view-toggle-btn active" data-mode="all" onclick="setComponentView('${turnId}', 'all')">All</button>
+              <button class="view-toggle-btn" data-mode="banner" onclick="setComponentView('${turnId}', 'banner')">📢 AdBanner</button>
+              <button class="view-toggle-btn" data-mode="cards" onclick="setComponentView('${turnId}', 'cards')">🃏 Cards</button>
+            </div>
             <span class="sponsored-meta" id="sponsored-meta-${turnId}"></span>
           </div>
+          <!-- Hero A2UI AdBanner Component -->
+          <div class="ad-banner-slot" id="banner-slot-${turnId}"></div>
           <div class="cards-grid" id="cards-grid-${turnId}"></div>
         </div>
 
@@ -288,6 +295,40 @@ async function submitMessage(query) {
               sponsoredContainer.classList.remove("hidden");
               cardsGrid.classList.remove("hidden");
               sponsoredMeta.textContent = `${evt.cards.length} Verified Sponsors • Google Ads & Shopping`;
+
+              // Render Hero A2UI AdBanner
+              const bannerData = evt.ad_banner || evt.cards[0];
+              const bannerSlot = document.getElementById(`banner-slot-${turnId}`);
+              if (bannerData && bannerSlot) {
+                const bannerLogo = bannerData.media_url || `https://www.google.com/s2/favicons?domain=${encodeURIComponent(bannerData.sponsor_name)}.com&sz=128`;
+                const bannerTarget = bannerData.target_url || "#";
+                const bannerCampId = bannerData.campaign_id || `camp_banner_${turnId}`;
+
+                bannerSlot.innerHTML = `
+                  <div class="a2ui-ad-banner" role="region" aria-label="A2UI Sponsored Banner from ${escapeHtml(bannerData.sponsor_name || 'Verified Sponsor')}">
+                    <div class="ad-banner-content">
+                      <div class="ad-banner-header">
+                        <div class="ad-banner-brand">
+                          <img class="ad-banner-favicon" src="${escapeHtml(bannerLogo)}" alt="Logo" onerror="this.src='https://www.google.com/s2/favicons?domain=google.com&sz=128'">
+                          <span class="ad-banner-sponsor">${escapeHtml(bannerData.sponsor_name || "Verified Sponsor")}</span>
+                        </div>
+                        <div class="ad-banner-badges">
+                          <span class="ad-banner-disclosure">Sponsored</span>
+                          <span class="clearing-price-badge">₹${Number(bannerData.clearing_price_inr || 350).toFixed(0)} CPM</span>
+                        </div>
+                      </div>
+                      <h3 class="ad-banner-headline">${escapeHtml(bannerData.headline || "Featured Promotional Solution")}</h3>
+                      <p class="ad-banner-body">${escapeHtml(bannerData.body || "")}</p>
+                    </div>
+                    <div class="ad-banner-action">
+                      <a class="ad-banner-cta-btn" href="${escapeHtml(bannerTarget)}" target="_blank" rel="noopener noreferrer" onclick="handleCardClick(event, '${currentSessionId}', '${bannerCampId}', '${escapeHtml(bannerTarget)}')">
+                        <span>${escapeHtml(bannerData.cta_label || "Learn More")}</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                      </a>
+                    </div>
+                  </div>
+                `;
+              }
 
               cardsGrid.innerHTML = "";
               evt.cards.forEach((card, idx) => {
@@ -648,4 +689,33 @@ function escapeHtml(text) {
     "'": "&#039;",
   };
   return String(text).replace(/[&<>"']/g, m => map[m]);
+}
+// ==============================================================================
+// A2UI Component View Switcher (All vs AdBanner vs SponsoredCards)
+// ==============================================================================
+function setComponentView(turnId, mode) {
+  const container = document.getElementById(`sponsored-${turnId}`);
+  if (!container) return;
+  const bannerSlot = document.getElementById(`banner-slot-${turnId}`);
+  const cardsGrid = document.getElementById(`cards-grid-${turnId}`);
+  const toggleBtns = container.querySelectorAll('.view-toggle-btn');
+
+  toggleBtns.forEach(btn => {
+    if (btn.getAttribute('data-mode') === mode) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  if (mode === 'all') {
+    if (bannerSlot) bannerSlot.style.display = 'block';
+    if (cardsGrid) cardsGrid.style.display = 'grid';
+  } else if (mode === 'banner') {
+    if (bannerSlot) bannerSlot.style.display = 'block';
+    if (cardsGrid) cardsGrid.style.display = 'none';
+  } else if (mode === 'cards') {
+    if (bannerSlot) bannerSlot.style.display = 'none';
+    if (cardsGrid) cardsGrid.style.display = 'grid';
+  }
 }
