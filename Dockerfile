@@ -1,6 +1,6 @@
 # ==============================================================================
 # Production Dockerfile for A2UI v0.9 Server & Google ADK Multi-Agent Engine
-# Optimized for Google Cloud Run & Firebase Hosting
+# Optimized for Standalone Container Runtimes (Cloud Run, Docker, K8s)
 # ==============================================================================
 FROM python:3.12-slim
 

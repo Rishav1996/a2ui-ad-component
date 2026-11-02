@@ -72,8 +72,6 @@ a2ui-ad-component/
 │       └── app.js                     # Real-time SSE streaming & quota meters
 │
 ├── Dockerfile                         # Production containerization
-├── firebase.json                      # Firebase Hosting configuration
-├── .firebaserc                        # Firebase project targeting
 ├── pyproject.toml                     # Python dependencies & build metadata
 ├── run_adk_server.py                  # Standalone FastAPI server launcher
 ├── LICENSE                            # Apache 2.0 Open-Source License
