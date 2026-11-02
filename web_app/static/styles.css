@@ -131,6 +131,40 @@ body {
   gap: 16px;
 }
 
+.sponsor-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fdf2f8;
+  color: #db2777;
+  border: 1px solid rgba(219, 39, 119, 0.3);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sponsor-nav-btn svg {
+  color: #db2777;
+  transition: transform 0.2s ease;
+}
+
+.sponsor-nav-btn:hover {
+  background: #db2777;
+  color: #ffffff;
+  border-color: #db2777;
+  box-shadow: 0 2px 8px rgba(219, 39, 119, 0.35);
+  transform: translateY(-1px);
+}
+
+.sponsor-nav-btn:hover svg {
+  color: #ffffff;
+  transform: scale(1.15);
+}
+
 .new-chat-btn {
   display: inline-flex;
   align-items: center;

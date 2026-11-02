@@ -1,6 +1,7 @@
 # A2UI v0.9 Commercial UI Extension & Multi-Agent Auction Engine in Google ADK
 
 [![Live Demo](https://img.shields.io/badge/Vercel-Live_Demo-black?logo=vercel&logoColor=white)](https://a2ui-ad-component.vercel.app)
+[![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-pink?logo=github&logoColor=white)](https://github.com/sponsors/Rishav1996)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23872614.svg)](https://doi.org/10.5281/zenodo.23872614)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/python-3.12%20%7C%203.13-blue.svg)](https://www.python.org/)
