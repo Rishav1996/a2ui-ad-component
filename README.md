@@ -15,7 +15,27 @@ Features an end-to-end **Real-Time Contextual Ad Auction Engine** (second-price 
 
 ---
 
+## 🎥 Live Interactive Demo & Video Walkthrough
+
+<p align="center">
+  <video src="docs/ad_demo_recording.mp4" controls="controls" width="100%"></video>
+</p>
+
+<p align="center">
+  <a href="docs/ad_demo_recording.mp4">
+    <img src="docs/images/a2ui_live_demo.gif" alt="A2UI Live Demo Preview" width="100%" />
+  </a>
+  <br>
+  <em>Figure 1: Real-time conversational search delivering organic synthesis alongside native, verified A2UI v0.9 Sponsored Cards. Click above to view the full MP4 walkthrough (<a href="docs/ad_demo_recording.mp4"><code>docs/ad_demo_recording.mp4</code></a>).</em>
+</p>
+
+---
+
 ## 1. Architectural Overview
+
+<p align="center">
+  <img src="docs/images/paradigm_conversational_a2ui.png" alt="Conversational A2UI Paradigm Architecture" width="100%" />
+</p>
 
 ```mermaid
 flowchart TD
@@ -51,7 +71,20 @@ flowchart TD
 
 ---
 
-## 2. Key Paradigms Evaluated
+## 2. Real-World Scenario Showcase
+
+The live demo handles multi-turn conversational queries across various intent levels:
+
+| Scenario | User Query & Intent | Visual Surface Output |
+| :--- | :--- | :--- |
+| **1. Commercial (Luxury Goods)** | `"suggest me top 10 watch list"`<br>*(Luxury Watches)* | Organic synthesis + 3 Verified Merchant Sponsored Cards with official domains & "Visit Site" CTAs.<br><br><img src="docs/images/luxury_watches_ad_cards.png" alt="Luxury Watches Ad Cards" width="100%"/> |
+| **2. Developer SaaS Tools** | `"Let's look into various agentic frameworks"`<br>*(SaaS Software)* | Neutral architectural analysis of LangGraph/CrewAI + contextually relevant enterprise sponsor cards.<br><br><img src="docs/images/commercial_agentic_ads_cards.png" alt="SaaS Agentic Software Ad Cards" width="100%"/> |
+| **3. Educational Gating** | `"Hi"` or `"Explain cellular respiration"`<br>*(Casual / Educational)* | **Strict 0-Ad Gating**: All commercial containers suppressed; 100% pure organic answer.<br><br><img src="docs/images/educational_zero_ad_gating.png" alt="Educational Zero-Ad Gating" width="100%"/> |
+| **4. Live Telemetry & Audit** | Audit Stream & Quota Governance | Live decrementing Gemini & SerpApi meters with SQLite audit logs recording intents & clearing prices.<br><br><img src="docs/images/realtime_ad_telemetry_audit_log.png" alt="Real-Time Telemetry Audit Log" width="100%"/> |
+
+---
+
+## 3. Key Paradigms Evaluated
 
 This framework benchmarks two architectural paradigms for generative UI monetization:
 
@@ -66,7 +99,7 @@ This framework benchmarks two architectural paradigms for generative UI monetiza
 
 ---
 
-## 3. Directory Layout
+## 4. Directory Layout
 
 ```
 .
@@ -80,10 +113,14 @@ This framework benchmarks two architectural paradigms for generative UI monetiza
 │   ├── common_types.json              # Canonical common types ($defs)
 │   ├── examples/                      # Valid v0.9 createSurface few-shot examples
 │   └── ad_examples/                   # Compatibility example payloads
-├── docs/                              # Project Documentation & Research Publications
+├── docs/                              # Project Documentation, Research & Media
 │   ├── ARCHITECTURE.md                # In-depth system design & auction mechanics
 │   ├── DIRECTORY_STRUCTURE.md         # Illustrated developer navigation guide
-│   └── medium_article.md              # Publication-ready technical article
+│   ├── generate_diagrams.py           # High-resolution 300 DPI diagram generator
+│   ├── medium_article.md              # Medium Article (TL;DR Executive Edition)
+│   ├── medium_article_full.md         # Medium Article (Full Deep-Dive Edition)
+│   ├── ad_demo_recording.mp4          # Complete live demo video recording
+│   └── images/                        # High-resolution architectural & UI figures
 ├── renderers/                         # Client-Side Web Component UI Renderers
 │   ├── lit/                           # Lit / TypeScript component renderers
 │   └── preview.html                   # Interactive browser previewer
@@ -101,7 +138,7 @@ This framework benchmarks two architectural paradigms for generative UI monetiza
 │       ├── index.html                 # Continuous Chat Workspace & Audit Stream Log
 │       ├── styles.css                 # Premium dark-mode glassmorphic design system
 │       └── app.js                     # Real-time SSE streaming, rendering & quota meters
-├── tests/                             # Comprehensive Pytest Suite (31 unit tests)
+├── tests/                             # Comprehensive Pytest Suite (49 unit tests)
 ├── api/                               # Vercel Serverless Function entrypoint
 │   └── index.py                       # ASGI handler & cross-platform scratch DB configuration
 ├── .env.example                       # Clean environment variable template
@@ -115,14 +152,15 @@ This framework benchmarks two architectural paradigms for generative UI monetiza
 └── vercel.json                        # Vercel Serverless Function & routing configuration
 ```
 
-> 📖 **Developer Guides**:
-> - For a detailed code walkthrough and developer onboarding map, see [`docs/DIRECTORY_STRUCTURE.md`](./docs/DIRECTORY_STRUCTURE.md).
-> - For a technical deep-dive into auction mechanics and benchmarks, see [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md).
-> - For the publication-ready article, see [`docs/medium_article.md`](./docs/medium_article.md).
+> 📖 **Developer & Thought Leadership Guides**:
+> - 📄 **Medium Article (Executive TL;DR Edition)**: [`docs/medium_article.md`](./docs/medium_article.md) — 4-minute read on the $300B search ad dilemma and A2UI commercial components.
+> - 📄 **Medium Article (Full Deep-Dive Edition)**: [`docs/medium_article_full.md`](./docs/medium_article_full.md) — 10-minute technical breakdown with FAQ and formal entity triples.
+> - 🗺️ **Code Walkthrough & Architecture Map**: [`docs/DIRECTORY_STRUCTURE.md`](./docs/DIRECTORY_STRUCTURE.md).
+> - 📐 **System Design & Auction Mechanics**: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md).
 
 ---
 
-## 4. Quick-Start Guide
+## 5. Quick-Start Guide
 
 ### Prerequisites
 - Python 3.12+ or 3.13+
@@ -168,7 +206,7 @@ This framework benchmarks two architectural paradigms for generative UI monetiza
 
 ---
 
-## 5. Dual API Quota Governance & Server-Down Protection
+## 6. Dual API Quota Governance & Server-Down Protection
 
 The application actively monitors real-time capacity across both external APIs to protect free tier allowances:
 
@@ -186,7 +224,7 @@ The application actively monitors real-time capacity across both external APIs t
 
 ---
 
-## 6. Citation
+## 7. Citation
 
 If you use this repository, its A2UI v0.9 ad extension schemas, or its multi-agent Vickrey auction framework in your research, please cite it as below:
 
@@ -198,7 +236,7 @@ If you use this repository, its A2UI v0.9 ad extension schemas, or its multi-age
   month        = nov,
   year         = 2026,
   publisher    = {Zenodo},
-  version      = {0.1.0},
+  version      = {0.1.3},
   doi          = {10.5281/zenodo.23872614},
   url          = {https://github.com/Rishav1996/a2ui-ad-component}
 }
@@ -209,6 +247,6 @@ See [`CITATION.cff`](./CITATION.cff) for full machine-readable metadata.
 
 ---
 
-## 7. License
+## 8. License
 
 This project is licensed under the **Apache 2.0 License** - see the [`LICENSE`](./LICENSE) file for details.
