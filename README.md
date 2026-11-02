@@ -75,23 +75,26 @@ This framework benchmarks two architectural paradigms for generative UI monetiza
 │   ├── adk-a2ui-callback-injector/    # Native ADK hook ad injection rules
 │   ├── adk-hybrid-model-router/       # Model routing (Ollama/LiteLlm & Gemini)
 │   └── adk-multiagent-benchmarker/    # Multi-agent benchmark orchestration
-├── catalogs/                          # Canonical A2UI v0.9 Catalogs & Schemas
-│   ├── common_types.json              # Canonical common types ($defs)
+├── catalogs/                          # Canonical A2UI v0.9 Component Specifications
 │   ├── ad_catalog.json                # AdBanner & SponsoredCard extension catalog
-│   ├── ad_examples/                   # Valid v0.9 createSurface few-shot examples
-│   └── renderers/lit/                 # Lit / Web Component reference renderers
-├── google_a2a_agent/                  # Core Multi-Agent & Auction Package
-│   ├── ad_client.py                   # Live SerpApi Google Shopping client & local DSP
-│   ├── ad_sandbox.py                  # SQLite Vickrey auction ledger & click telemetry
-│   ├── agent.py                       # Root ADK SequentialAgent pipeline coordinator
-│   ├── callbacks.py                   # ADK lifecycle callback hooks & security auditor
-│   ├── eval_agents.py                 # Multi-agent evaluators & behavioral drift judges
-│   ├── model_router.py                # Hybrid model provider router & rate limiter
-│   ├── quota_manager.py               # Live API quota governance (Gemini RPD + SerpApi)
+│   ├── common_types.json              # Canonical common types ($defs)
+│   ├── examples/                      # Valid v0.9 createSurface few-shot examples
+│   └── ad_examples/                   # Compatibility example payloads
+├── docs/                              # Project Documentation & Research Publications
+│   ├── ARCHITECTURE.md                # In-depth system design & auction mechanics
+│   ├── DIRECTORY_STRUCTURE.md         # Illustrated developer navigation guide
+│   └── medium_article.md              # Publication-ready technical article
+├── renderers/                         # Client-Side Web Component UI Renderers
+│   ├── lit/                           # Lit / TypeScript component renderers
+│   └── preview.html                   # Interactive browser previewer
+├── google_a2a_agent/                  # Modular Multi-Agent & Auction Engine
+│   ├── agents/                        # Multi-agent definitions & evaluators
+│   ├── auction/                       # Second-price Vickrey auction, RTB & callbacks
+│   ├── governance/                    # Quota management & hybrid model router
+│   ├── schemas/                       # Schema validation & visual surface generation
+│   ├── tools/                         # Executable ADK tools & telemetry reporting
 │   ├── runner.py                      # Singleton ADK InMemoryRunner & SSE stream generator
-│   ├── schema_manager.py              # A2uiSchemaManager (Draft 2020-12 validator)
-│   ├── sut_agents.py                  # Mode A and Mode B SUT agent definitions
-│   └── tools.py                       # ADK ad dispatch tools & telemetry reporting
+│   └── __init__.py                    # Public package exports (100% backward-compatible)
 ├── web_app/                           # Full-Stack Interactive Web Application
 │   ├── server.py                      # FastAPI server with SSE streaming (/api/chat/stream)
 │   └── static/                        # Modern frontend UI
@@ -108,6 +111,11 @@ This framework benchmarks two architectural paradigms for generative UI monetiza
 ├── pyproject.toml                     # Python dependencies & build metadata
 └── run_adk_server.py                  # Standalone FastAPI server launcher
 ```
+
+> 📖 **Developer Guides**:
+> - For a detailed code walkthrough and developer onboarding map, see [`docs/DIRECTORY_STRUCTURE.md`](./docs/DIRECTORY_STRUCTURE.md).
+> - For a technical deep-dive into auction mechanics and benchmarks, see [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md).
+> - For the publication-ready article, see [`docs/medium_article.md`](./docs/medium_article.md).
 
 ---
 
